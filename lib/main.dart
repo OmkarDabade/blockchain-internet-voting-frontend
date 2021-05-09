@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ivote/add_candidate_view.dart';
 import 'package:ivote/constants.dart';
 import 'package:ivote/login_view.dart';
 
@@ -12,7 +13,7 @@ class IVote extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'I-Vote',
-      initialRoute: LoginView.routeName,
+      initialRoute: AddCandidateView.routeName,
       routes: routes,
       debugShowCheckedModeBanner: false,
     );
