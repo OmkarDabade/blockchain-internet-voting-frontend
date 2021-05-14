@@ -35,22 +35,48 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                 width: 500.0,
                 child: Column(
                   children: [
-                    TextField(),
-                    TextField(),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Candidate\'s Name',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 0.9),
+                        ),
+                        // contentPadding: EdgeInsets.all(4.0),
+                      ),
+                      scrollPadding: EdgeInsets.all(4.0),
+                    ),
+                    SizedBox(height: 10.0),
+                    TextField(
+                      decoration: InputDecoration(
+                          labelText: 'Candidate\'s Party',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(width: 0.9))),
+                    ),
+                    SizedBox(height: 10.0),
                     TextField(
                       // minLines: 3,
                       maxLines: 4,
+                      decoration: InputDecoration(
+                          labelText: 'Candidate\'s Agenda',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(width: 0.9))),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          Padding(
-            padding:
+          Container(
+            height: 50.0,
+            width: 350.0,
+            margin:
                 const EdgeInsets.symmetric(horizontal: 100.0, vertical: 50.0),
             child: ElevatedButton.icon(
-                onPressed: () {}, icon: Icon(Icons.add), label: Text('Add')),
+              style: ButtonStyle(),
+              onPressed: () {},
+              icon: Icon(Icons.add),
+              label: Text('Add Candidate', style: TextStyle(fontSize: 23.0)),
+            ),
           ),
         ],
       ),

@@ -55,19 +55,19 @@ class _ProofOfVoteState extends State<ProofOfVote> {
         width: double.infinity,
         color: Colors.grey,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Flexible(
-              flex: 3,
+            Expanded(
+              // flex: 3,
               child: Container(child: Text(blockHash)),
             ),
-            Flexible(
-              flex: 1,
+            Expanded(
+              // flex: 1,
               child: Container(child: Text(votedTo)),
             ),
-            Flexible(
-              flex: 3,
+            Expanded(
+              // flex: 3,
               child: Container(child: Text(voterHash)),
             ),
           ],
