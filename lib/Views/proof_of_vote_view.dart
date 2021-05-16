@@ -13,7 +13,7 @@ class _ProofOfVoteState extends State<ProofOfVote> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            height: 100.0,
+            height: 70.0,
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -31,13 +31,22 @@ class _ProofOfVoteState extends State<ProofOfVote> {
               ],
             ),
           ),
+          _proofOfVoteBlock(
+              blockNo: 'Block#',
+              voterHash: 'Voter',
+              blockHash: 'Tx Block Hash',
+              votedTo: 'Vote to',
+              timestamp: 'Time'),
+          const SizedBox(height: 10.0),
           Expanded(
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: 17,
               itemBuilder: (context, index) => _proofOfVoteBlock(
+                blockNo: '${index + 1}',
                 blockHash: 'ashfgasyhfkgvyhfvkwebvfhqlsgfyugyit36r23t7r83t27',
                 voterHash: 'ahsvckahgsvcqywlgf7328otr732gfyvc32o78',
                 votedTo: 'Me',
+                timestamp: 'NOWWWWW',
               ),
             ),
           ),
@@ -49,27 +58,41 @@ class _ProofOfVoteState extends State<ProofOfVote> {
   Widget _proofOfVoteBlock(
           {@required String blockHash,
           @required String voterHash,
-          @required String votedTo}) =>
+          @required String votedTo,
+          @required String blockNo,
+          @required String timestamp}) =>
       Container(
-        margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
-        height: 70.0,
+        margin: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 2.0),
+        padding: EdgeInsets.all(15.0),
+        height: 50.0,
         width: double.infinity,
-        color: Colors.grey,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          color: Colors.grey,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              // flex: 3,
-              child: Container(child: Text(blockHash)),
+              flex: 1,
+              child: Container(child: Text(blockNo)),
             ),
             Expanded(
-              // flex: 1,
+              flex: 3,
+              child: Container(child: Text(voterHash)),
+            ),
+            Expanded(
+              flex: 1,
               child: Container(child: Text(votedTo)),
             ),
             Expanded(
-              // flex: 3,
-              child: Container(child: Text(voterHash)),
+              flex: 1,
+              child: Container(child: Text(timestamp)),
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(child: Text(blockHash)),
             ),
           ],
         ),

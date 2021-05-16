@@ -10,8 +10,18 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   List<String> _states = ["Choose a state"];
   List<String> _districts = ["Choose .."];
+  List<String> _wards = [
+    "Choose ..",
+    "Ward 1",
+    "Ward 2",
+    "Ward 3",
+    "Ward 4",
+    "Ward 5",
+    "Ward 6"
+  ];
   String _selectedState = "Choose a state";
   String _selectedDistrict = "Choose ..";
+  String _selectedWard = "Choose ..";
 
   @override
   void initState() {
@@ -30,6 +40,8 @@ class _HomeViewState extends State<HomeView> {
             width: double.infinity,
             color: Colors.greenAccent,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   height: 50.0,
@@ -64,6 +76,34 @@ class _HomeViewState extends State<HomeView> {
                     value: _selectedDistrict,
                   ),
                 ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10.0),
+                  height: 50.0,
+                  width: 200.0,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    items: _wards.map((String dropDownStringItem) {
+                      return DropdownMenuItem<String>(
+                        value: dropDownStringItem,
+                        child: Text(dropDownStringItem),
+                      );
+                    }).toList(),
+                    // onChanged: (value) => print(value),
+                    onChanged: (value) => _onSelectedWard(value),
+                    value: _selectedWard,
+                  ),
+                ),
+                Container(
+                  height: 40.0,
+                  width: 130.0,
+                  margin: EdgeInsets.all(50.0),
+                  child: ElevatedButton.icon(
+                    // style: ButtonStyle(),
+                    onPressed: () {},
+                    icon: Icon(Icons.search_outlined),
+                    label: Text('Search', style: TextStyle(fontSize: 19.0)),
+                  ),
+                ),
               ],
             ),
           ),
@@ -93,11 +133,17 @@ class _HomeViewState extends State<HomeView> {
     setState(() => _selectedDistrict = value);
   }
 
-  Widget _candidateDetailsBlock(
-          {@required String candidateName, @required String candidateParty}) =>
+  void _onSelectedWard(String value) {
+    setState(() => _selectedWard = value);
+  }
+
+  Widget _candidateDetailsBlock({
+    @required String candidateName,
+    @required String candidateParty,
+  }) =>
       Container(
         margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 100.0),
-        padding: EdgeInsets.all(30.0),
+        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
           border: Border.all(width: 0.9),
@@ -109,7 +155,7 @@ class _HomeViewState extends State<HomeView> {
           children: [
             Container(
               height: 150.0,
-              width: 150.0,
+              width: 130.0,
               margin: EdgeInsets.only(left: 50.0, right: 25.0),
               color: Colors.green,
               child: Icon(Icons.perm_contact_calendar_outlined),
@@ -119,28 +165,36 @@ class _HomeViewState extends State<HomeView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Canidate Name: $candidateName'),
-                  SizedBox(height: 15.0),
-                  Text('Canidate\'s Party: $candidateParty'),
-                  SizedBox(height: 15.0),
-                  Container(
-                    height: 100.0,
-                    width: 100.0,
-                    child: Icon(Icons.android_outlined),
-                  ),
+                  Text('Candidate Name: $candidateName',
+                      style: TextStyle(
+                          fontSize: 21.0, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 25.0),
+                  Text('Candidate\'s Party: $candidateParty',
+                      style: TextStyle(fontSize: 21.0)),
                 ],
               ),
             ),
             Spacer(),
             Container(
-              height: 60.0,
+              // height: double.infinity,
               width: 150.0,
-              margin: EdgeInsets.all(50.0),
-              child: ElevatedButton.icon(
-                // style: ButtonStyle(),
-                onPressed: () {},
-                icon: Icon(Icons.thumb_up_alt_outlined),
-                label: Text('Vote', style: TextStyle(fontSize: 21.0)),
+              // padding: EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(Icons.android_outlined, size: 50.0),
+                  SizedBox(height: 50.0),
+                  Container(
+                    height: 40.0,
+                    width: 120.0,
+                    child: ElevatedButton.icon(
+                      // style: ButtonStyle(),
+                      onPressed: () {},
+                      icon: Icon(Icons.thumb_up_alt_outlined),
+                      label: Text('Vote', style: TextStyle(fontSize: 21.0)),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
