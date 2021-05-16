@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'home_view.dart';
+import 'package:ivote/App/routes.dart';
 
 class LoginView extends StatefulWidget {
-  static const String routeName = 'login-view';
   @override
   _LoginViewState createState() => _LoginViewState();
 }
@@ -13,34 +11,24 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 255),
-      bottomNavigationBar: BottomAppBar(
-          child: Container(
-              height: 40,
-              child: Text(
-                "Made with ♥ in India",
-                textAlign: TextAlign.center,
-              ))),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 60.0),
+              padding: const EdgeInsets.only(top: 100.0, bottom: 50.0),
               child: Center(
-                child: Container(
-                    width: 200,
-                    height: 150,
-                    /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
-                    child: Image.asset(
-                      'images/SatyamevJayate.png',
-                      scale: 0.04,
-                    )),
+                child: Text(
+                  'I-Vote',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 5, right: 5, top: 0, bottom: 0),
+            Container(
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 decoration: InputDecoration(
@@ -49,9 +37,9 @@ class _LoginViewState extends State<LoginView> {
                     hintText: 'Enter valid email id as abc@gmail.com'),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+            Container(
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 obscureText: true,
@@ -74,11 +62,12 @@ class _LoginViewState extends State<LoginView> {
             Container(
               height: 50,
               width: 250,
+              margin: EdgeInsets.symmetric(vertical: 35.0),
               decoration: BoxDecoration(
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, HomeView.routeName);
+                  Navigator.pushNamed(context, Routes.homeView);
                   // Navigator.push(
                   //     context, MaterialPageRoute(builder: (_) => HomeView()));
                 },
@@ -88,13 +77,20 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 130,
-            ),
+            // SizedBox(
+            //   height: 50,
+            // ),
             Text('New User? Create Account')
           ],
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+          child: Container(
+              height: 40,
+              child: Text(
+                "Made with ♥ in India",
+                textAlign: TextAlign.center,
+              ))),
     );
   }
 }

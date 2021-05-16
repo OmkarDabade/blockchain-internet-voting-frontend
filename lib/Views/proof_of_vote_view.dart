@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ProofOfVote extends StatefulWidget {
-  static const String routeName = 'proof-of-vote';
   @override
   _ProofOfVoteState createState() => _ProofOfVoteState();
 }
@@ -33,13 +32,15 @@ class _ProofOfVoteState extends State<ProofOfVote> {
             ),
           ),
           Expanded(
-              child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) => _proofOfVoteBlock(
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) => _proofOfVoteBlock(
                 blockHash: 'ashfgasyhfkgvyhfvkwebvfhqlsgfyugyit36r23t7r83t27',
                 voterHash: 'ahsvckahgsvcqywlgf7328otr732gfyvc32o78',
-                votedTo: 'Me'),
-          )),
+                votedTo: 'Me',
+              ),
+            ),
+          ),
         ],
       ),
     );

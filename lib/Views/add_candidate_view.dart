@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AddCandidateView extends StatefulWidget {
-  static const String routeName = 'add-candidate';
   @override
   _AddCandidateViewState createState() => _AddCandidateViewState();
 }
