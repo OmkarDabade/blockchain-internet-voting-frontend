@@ -10,18 +10,19 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(255, 255, 255, 255),
+      backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 100.0, bottom: 50.0),
+              padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
               child: Center(
-                child: Text(
-                  'I-Vote',
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
+                child: Container(
+                  width: 250,
+                  height: 150,
+                  child: Image.asset(
+                    'assets/images/voting_logo3.png',
+                    scale: 0.09,
                   ),
                 ),
               ),
@@ -87,9 +88,14 @@ class _LoginViewState extends State<LoginView> {
       bottomNavigationBar: BottomAppBar(
           child: Container(
               height: 40,
+              padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
               child: Text(
-                "Made with ♥ in India",
+                "Made with ❤️ in India",
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.lightBlue,
+                ),
               ))),
     );
   }
