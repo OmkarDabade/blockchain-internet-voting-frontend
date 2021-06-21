@@ -62,7 +62,7 @@ class _LoginViewState extends State<LoginView> {
             ),
             Container(
               height: 50,
-              width: 250,
+              width: 300,
               margin: EdgeInsets.symmetric(vertical: 35.0),
               decoration: BoxDecoration(
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
