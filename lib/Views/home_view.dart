@@ -9,9 +9,9 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   List<String> _states = ["Choose a state"];
-  List<String> _districts = ["Choose .."];
+  List<String> _districts = ["Choose a district"];
   List<String> _wards = [
-    "Choose ..",
+    "Choose a ward",
     "Ward 1",
     "Ward 2",
     "Ward 3",
@@ -20,8 +20,8 @@ class _HomeViewState extends State<HomeView> {
     "Ward 6"
   ];
   String _selectedState = "Choose a state";
-  String _selectedDistrict = "Choose ..";
-  String _selectedWard = "Choose ..";
+  String _selectedDistrict = "Choose a district";
+  String _selectedWard = "Choose a ward";
 
   @override
   void initState() {
@@ -36,16 +36,16 @@ class _HomeViewState extends State<HomeView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 150.0,
+            height: 100.0,
             width: double.infinity,
-            color: Colors.greenAccent,
+            color: Colors.grey[350],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   height: 50.0,
-                  width: 200.0,
+                  width: 190.0,
                   margin: EdgeInsets.symmetric(horizontal: 10.0),
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -62,7 +62,7 @@ class _HomeViewState extends State<HomeView> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10.0),
                   height: 50.0,
-                  width: 200.0,
+                  width: 190.0,
                   child: DropdownButton<String>(
                     isExpanded: true,
                     items: _districts.map((String dropDownStringItem) {
@@ -79,7 +79,7 @@ class _HomeViewState extends State<HomeView> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10.0),
                   height: 50.0,
-                  width: 200.0,
+                  width: 190.0,
                   child: DropdownButton<String>(
                     isExpanded: true,
                     items: _wards.map((String dropDownStringItem) {
@@ -94,14 +94,14 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
                 Container(
-                  height: 40.0,
-                  width: 130.0,
-                  margin: EdgeInsets.all(50.0),
+                  height: 35.0,
+                  width: 140.0,
+                  margin: EdgeInsets.symmetric(horizontal: 10.0),
                   child: ElevatedButton.icon(
                     // style: ButtonStyle(),
                     onPressed: () {},
-                    icon: Icon(Icons.search_outlined),
-                    label: Text('Search', style: TextStyle(fontSize: 19.0)),
+                    icon: Icon(Icons.search_sharp),
+                    label: Text('Search', style: TextStyle(fontSize: 18.0)),
                   ),
                 ),
               ],
@@ -121,8 +121,8 @@ class _HomeViewState extends State<HomeView> {
 
   void _onSelectedState(String value) {
     setState(() {
-      _selectedDistrict = "Choose ..";
-      _districts = ["Choose .."];
+      _selectedDistrict = "Choose a district";
+      _districts = ["Choose a district"];
       _selectedState = value;
       _districts = List.from(_districts)
         ..addAll(Location.getLocalByState(value));
@@ -157,8 +157,8 @@ class _HomeViewState extends State<HomeView> {
               height: 150.0,
               width: 130.0,
               margin: EdgeInsets.only(left: 50.0, right: 25.0),
-              color: Colors.green,
-              child: Icon(Icons.perm_contact_calendar_outlined),
+              color: Colors.green[200],
+              child: Icon(Icons.person_outline_outlined),
             ),
             Container(
               child: Column(
@@ -186,12 +186,12 @@ class _HomeViewState extends State<HomeView> {
                   SizedBox(height: 50.0),
                   Container(
                     height: 40.0,
-                    width: 120.0,
+                    width: 150.0,
                     child: ElevatedButton.icon(
                       // style: ButtonStyle(),
                       onPressed: () {},
-                      icon: Icon(Icons.thumb_up_alt_outlined),
-                      label: Text('Vote', style: TextStyle(fontSize: 21.0)),
+                      icon: Icon(Icons.thumb_up_outlined),
+                      label: Text('Vote', style: TextStyle(fontSize: 19.0)),
                     ),
                   ),
                 ],
