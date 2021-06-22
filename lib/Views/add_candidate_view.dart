@@ -27,8 +27,8 @@ class _AddCandidateViewState extends State<AddCandidateView> {
               Container(
                 height: 250.0,
                 width: 250.0,
-                color: Colors.grey,
-                child: Icon(Icons.perm_contact_cal_outlined),
+                color: Colors.grey[400],
+                child: Icon(Icons.person_outline_outlined),
               ),
               Container(
                 width: 500.0,
@@ -79,6 +79,16 @@ class _AddCandidateViewState extends State<AddCandidateView> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomAppBar(
+          child: Container(
+              height: 40,
+              color: Colors.grey[50],
+              padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+              child: Text(
+                "Made with ❤️ in India",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.0, color: Colors.lightBlue),
+              ))),
     );
   }
 }
