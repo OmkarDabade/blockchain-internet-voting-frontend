@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
 
-class LoginView extends StatefulWidget {
+class SignUpView extends StatefulWidget {
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _SignupViewState createState() => _SignupViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignupViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +27,32 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
+            Text('Create Your Account'),
+
+            Container(
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              //padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Full Name',
+                    hintText: 'As per goverenment ID card'),
+              ),
+            ),
+
+            Container(
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              //padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Gender',
+                    hintText: 'Male/Female'),
+              ),
+            ),
+
             Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -50,16 +76,7 @@ class _LoginViewState extends State<LoginView> {
                     hintText: 'Enter secure password'),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                // ignore: todo
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
-              },
-              child: Text(
-                'Forgot Password',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-            ),
+
             Container(
               height: 50,
               width: 300,
@@ -73,7 +90,7 @@ class _LoginViewState extends State<LoginView> {
                   //     context, MaterialPageRoute(builder: (_) => HomeView()));
                 },
                 child: Text(
-                  'Login',
+                  'Sign Up',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
               ),
@@ -84,14 +101,13 @@ class _LoginViewState extends State<LoginView> {
             Container(
               child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.signUpView);
+                    Navigator.pushNamed(context, Routes.loginView);
                   },
                   child: Text(
-                    'New User? Create Account',
+                    'Already have an account? Login',
                     style: TextStyle(color: Colors.blue, fontSize: 15),
                   )),
             )
-            // Text('New User? Create Account')
           ],
         ),
       ),
