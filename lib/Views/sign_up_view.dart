@@ -15,7 +15,7 @@ class _SignupViewState extends State<SignUpView> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
+              padding: const EdgeInsets.only(top: 20.0, bottom: 0.0),
               child: Center(
                 child: Container(
                   width: 250,
@@ -74,6 +74,19 @@ class _SignupViewState extends State<SignUpView> {
                     border: OutlineInputBorder(),
                     labelText: 'Password',
                     hintText: 'Enter secure password'),
+              ),
+            ),
+
+            Container(
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              //padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Confirm Password',
+                    hintText: 'Re-enter Password'),
               ),
             ),
 
