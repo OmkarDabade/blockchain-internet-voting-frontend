@@ -36,9 +36,9 @@ class _HomeViewState extends State<HomeView> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 100.0,
+            height: 70.0,
             width: double.infinity,
-            color: Colors.grey[350],
+            color: Colors.orange[200],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,7 +98,12 @@ class _HomeViewState extends State<HomeView> {
                   width: 140.0,
                   margin: EdgeInsets.symmetric(horizontal: 10.0),
                   child: ElevatedButton.icon(
-                    // style: ButtonStyle(),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      onPrimary: Colors.black,
+                      shadowColor: Colors.black,
+                      elevation: 10,
+                    ),
                     onPressed: () {},
                     icon: Icon(Icons.search_sharp),
                     label: Text('Search', style: TextStyle(fontSize: 18.0)),
@@ -116,6 +121,16 @@ class _HomeViewState extends State<HomeView> {
           )
         ],
       ),
+      bottomNavigationBar: BottomAppBar(
+          child: Container(
+              height: 40,
+              color: Colors.grey[50],
+              padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+              child: Text(
+                "Made with ❤️ in India",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.0, color: Colors.red),
+              ))),
     );
   }
 
@@ -142,12 +157,12 @@ class _HomeViewState extends State<HomeView> {
     @required String candidateParty,
   }) =>
       Container(
-        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 100.0),
+        margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 200.0),
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(8.0),
           border: Border.all(width: 0.9),
-          color: Colors.blueGrey,
+          color: Colors.green[200],
         ),
         child: Row(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,7 +172,7 @@ class _HomeViewState extends State<HomeView> {
               height: 150.0,
               width: 130.0,
               margin: EdgeInsets.only(left: 50.0, right: 25.0),
-              color: Colors.green[200],
+              color: Colors.white70,
               child: Icon(Icons.person_outline_outlined),
             ),
             Container(
@@ -165,6 +180,7 @@ class _HomeViewState extends State<HomeView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 35.0),
                   Text('Candidate Name: $candidateName',
                       style: TextStyle(
                           fontSize: 21.0, fontWeight: FontWeight.bold)),
@@ -188,7 +204,12 @@ class _HomeViewState extends State<HomeView> {
                     height: 40.0,
                     width: 150.0,
                     child: ElevatedButton.icon(
-                      // style: ButtonStyle(),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.lightBlue,
+                        onPrimary: Colors.white,
+                        shadowColor: Colors.orange[400],
+                        elevation: 10,
+                      ),
                       onPressed: () {},
                       icon: Icon(Icons.thumb_up_outlined),
                       label: Text('Vote', style: TextStyle(fontSize: 19.0)),
