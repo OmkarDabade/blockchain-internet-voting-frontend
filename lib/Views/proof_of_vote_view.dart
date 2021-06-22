@@ -21,12 +21,22 @@ class _ProofOfVoteState extends State<ProofOfVote> {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width * 3 / 5,
-                  child: TextField(),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        hintText:
+                            'Enter your private key to check your vote submission'),
+                  ),
                 ),
                 ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.lightBlue,
+                    onPrimary: Colors.white,
+                    shadowColor: Colors.black,
+                    elevation: 10,
+                  ),
                   onPressed: () {},
-                  icon: Icon(Icons.search_outlined),
-                  label: Text('Search'),
+                  icon: Icon(Icons.search_sharp),
+                  label: Text('Search', style: TextStyle(fontSize: 18.0)),
                 )
               ],
             ),
@@ -46,12 +56,22 @@ class _ProofOfVoteState extends State<ProofOfVote> {
                 blockHash: 'ashfgasyhfkgvyhfvkwebvfhqlsgfyugyit36r23t7r83t27',
                 voterHash: 'ahsvckahgsvcqywlgf7328otr732gfyvc32o78',
                 votedTo: 'Me',
-                timestamp: 'NOWWWWW',
+                timestamp: '10:09 AM',
               ),
             ),
           ),
         ],
       ),
+      bottomNavigationBar: BottomAppBar(
+          child: Container(
+              height: 40,
+              color: Colors.grey[50],
+              padding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+              child: Text(
+                "Made with ❤️ in India",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.0, color: Colors.lightBlue),
+              ))),
     );
   }
 
@@ -68,7 +88,7 @@ class _ProofOfVoteState extends State<ProofOfVote> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color: Colors.grey,
+          color: Colors.grey[400],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
