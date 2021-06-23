@@ -6,7 +6,7 @@
 ![Login Page](https://user-images.githubusercontent.com/76807724/123048250-d48abe00-d41b-11eb-80b8-812779c0272e.png)
 
 
-### 2. Sign Up Page
+### 2. Sign Up Page 
 ![Sign Up](https://user-images.githubusercontent.com/76807724/123048551-23d0ee80-d41c-11eb-9b7b-0d65ec4c3536.png)
 
 
