@@ -129,7 +129,7 @@ class _HomeViewState extends State<HomeView> {
               child: Text(
                 "Made with ❤️ in India",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.0, color: Colors.red),
+                style: TextStyle(fontSize: 16.0, color: Colors.lightBlue),
               ))),
     );
   }
