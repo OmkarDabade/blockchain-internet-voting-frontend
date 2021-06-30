@@ -7,8 +7,14 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignUpView> {
+  static const _gender = [
+    'Male',
+    'Female',
+    'Rather not to say',
+  ];
   @override
   Widget build(BuildContext context) {
+    String _selectedGender;
     return Scaffold(
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: SingleChildScrollView(
@@ -44,12 +50,42 @@ class _SignupViewState extends State<SignUpView> {
             Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              // //padding: EdgeInsets.symmetric(horizontal: 15),
+              // child: TextField(
+              //   decoration: InputDecoration(
+              //       border: OutlineInputBorder(),
+              //       labelText: 'Gender',
+              //       hintText: 'Male/Female'),
+              // ),
+
+              child: InputDecorator(
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Gender',
-                    hintText: 'Male/Female'),
+                  // labelText: 'Gender',
+                  labelStyle: Theme.of(context)
+                      .primaryTextTheme
+                      .caption
+                      .copyWith(color: Colors.black),
+                  border: const OutlineInputBorder(),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    hint: Text('Gender'),
+                    isExpanded: true,
+                    isDense: true, // Reduces the dropdowns height by +/- 50%
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    value: _selectedGender,
+
+                    items: _gender.map((item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Text(item),
+                      );
+                    }).toList(),
+                    onChanged: (selectedItem) => setState(
+                      () => _selectedGender = selectedItem,
+                    ),
+                  ),
+                ),
               ),
             ),
 
