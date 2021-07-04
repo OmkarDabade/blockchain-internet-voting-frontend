@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
+import 'package:intl/intl.dart';
 
 class SignUpView extends StatefulWidget {
   @override
@@ -7,11 +8,21 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignUpView> {
-  static const _gender = [
+  //used for gender buuton
+  var _gender = [
     'Male',
     'Female',
     'Rather not to say',
   ];
+
+//used for calendar
+  TextEditingController dateinput = TextEditingController();
+  @override
+  void initState() {
+    dateinput.text = ""; //set the initial value of text field
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     String _selectedGender;
@@ -48,6 +59,43 @@ class _SignupViewState extends State<SignUpView> {
             ),
 
             Container(
+                width: 300.0,
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: TextField(
+                  controller: dateinput, //editing controller of this TextField
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), labelText: "Date of Birth"),
+                  readOnly:
+                      true, //set it true, so that user will not able to edit text
+                  onTap: () async {
+                    DateTime pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                            1000), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime.now() //DateTime(2101)
+                        );
+
+                    if (pickedDate != null) {
+                      print(
+                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                      print(
+                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      //you can implement different kind of Date Format here according to your requirement
+
+                      setState(() {
+                        dateinput.text =
+                            formattedDate; //set output date to TextField value.
+                      });
+                    } else {
+                      print("Date is not selected");
+                    }
+                  },
+                )),
+
+            Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               // //padding: EdgeInsets.symmetric(horizontal: 15),
@@ -57,35 +105,44 @@ class _SignupViewState extends State<SignUpView> {
               //       labelText: 'Gender',
               //       hintText: 'Male/Female'),
               // ),
-
-              child: InputDecorator(
-                decoration: InputDecoration(
-                  // labelText: 'Gender',
-                  labelStyle: Theme.of(context)
-                      .primaryTextTheme
-                      .caption
-                      .copyWith(color: Colors.black),
-                  border: const OutlineInputBorder(),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    hint: Text('Gender'),
-                    isExpanded: true,
-                    isDense: true, // Reduces the dropdowns height by +/- 50%
-                    icon: Icon(Icons.keyboard_arrow_down),
-                    value: _selectedGender,
-
-                    items: _gender.map((item) {
-                      return DropdownMenuItem(
-                        value: item,
-                        child: Text(item),
-                      );
-                    }).toList(),
-                    onChanged: (selectedItem) => setState(
-                      () => _selectedGender = selectedItem,
+              child: FormField<String>(
+                builder: (FormFieldState<String> state) {
+                  return InputDecorator(
+                    decoration: InputDecoration(
+                      // labelText: 'Gender',
+                      hintText: 'Gender',
+                      labelStyle: Theme.of(context)
+                          .primaryTextTheme
+                          .caption
+                          .copyWith(color: Colors.black),
+                      border: const OutlineInputBorder(),
                     ),
-                  ),
-                ),
+                    isEmpty: _selectedGender == '',
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        hint: Text('Gender'),
+                        value: _selectedGender,
+                        isExpanded: true,
+                        isDense:
+                            true, // Reduces the dropdowns height by +/- 50%
+                        icon: Icon(Icons.keyboard_arrow_down),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            _selectedGender = newValue;
+                            state.didChange(newValue);
+                          });
+                        },
+
+                        items: _gender.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
 
@@ -100,6 +157,7 @@ class _SignupViewState extends State<SignUpView> {
                     hintText: 'Enter valid email id as abc@gmail.com'),
               ),
             ),
+
             Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
