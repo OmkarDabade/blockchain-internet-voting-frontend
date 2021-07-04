@@ -8,13 +8,6 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignUpView> {
-  //used for gender buuton
-  var _gender = [
-    'Male',
-    'Female',
-    'Rather not to say',
-  ];
-
 //used for calendar
   TextEditingController dateinput = TextEditingController();
   @override
@@ -25,7 +18,6 @@ class _SignupViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    String _selectedGender;
     return Scaffold(
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: SingleChildScrollView(
@@ -98,51 +90,12 @@ class _SignupViewState extends State<SignUpView> {
             Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
-              // //padding: EdgeInsets.symmetric(horizontal: 15),
-              // child: TextField(
-              //   decoration: InputDecoration(
-              //       border: OutlineInputBorder(),
-              //       labelText: 'Gender',
-              //       hintText: 'Male/Female'),
-              // ),
-              child: FormField<String>(
-                builder: (FormFieldState<String> state) {
-                  return InputDecorator(
-                    decoration: InputDecoration(
-                      // labelText: 'Gender',
-                      hintText: 'Gender',
-                      labelStyle: Theme.of(context)
-                          .primaryTextTheme
-                          .caption
-                          .copyWith(color: Colors.black),
-                      border: const OutlineInputBorder(),
-                    ),
-                    isEmpty: _selectedGender == '',
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        hint: Text('Gender'),
-                        value: _selectedGender,
-                        isExpanded: true,
-                        isDense:
-                            true, // Reduces the dropdowns height by +/- 50%
-                        icon: Icon(Icons.keyboard_arrow_down),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            _selectedGender = newValue;
-                            state.didChange(newValue);
-                          });
-                        },
-
-                        items: _gender.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  );
-                },
+              //padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Gender',
+                    hintText: 'Male/Female'),
               ),
             ),
 
