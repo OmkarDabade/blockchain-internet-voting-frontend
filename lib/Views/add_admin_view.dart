@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
 
-class LoginView extends StatefulWidget {
+class AddAdminView extends StatefulWidget {
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _AddAdminViewState createState() => _AddAdminViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _AddAdminViewState extends State<AddAdminView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +27,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
+            Text('Add Admin'),
             Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -34,8 +35,20 @@ class _LoginViewState extends State<LoginView> {
               child: TextField(
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                    labelText: 'Name',
+                    hintText: 'Enter your name'),
+              ),
+            ),
+            Container(
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              //padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Login ID',
+                    hintText: 'Enter your login ID'),
               ),
             ),
             Container(
@@ -47,20 +60,22 @@ class _LoginViewState extends State<LoginView> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
-                    hintText: 'Enter secure password'),
+                    hintText: 'Enter your password'),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                // ignore: todo
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
-                Navigator.pushNamed(context, Routes.forgotPasswordView);
-              },
-              child: Text(
-                'Forgot Password',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
+            Container(
+              width: 300.0,
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              //padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Confirm Password',
+                    hintText: 'Re-enter your password'),
               ),
             ),
+
             Container(
               height: 50,
               width: 300,
@@ -69,12 +84,10 @@ class _LoginViewState extends State<LoginView> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, Routes.homeView);
-                  // Navigator.push(
-                  //     context, MaterialPageRoute(builder: (_) => HomeView()));
+                  Navigator.pushNamed(context, Routes.addCandidateView);
                 },
                 child: Text(
-                  'Login',
+                  'Register',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
               ),
@@ -82,17 +95,6 @@ class _LoginViewState extends State<LoginView> {
             // SizedBox(
             //   height: 50,
             // ),
-            Container(
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.signUpView);
-                  },
-                  child: Text(
-                    'New User? Create Account',
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
-                  )),
-            )
-            // Text('New User? Create Account')
           ],
         ),
       ),

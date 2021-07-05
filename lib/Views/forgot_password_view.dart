@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
 
-class SignUpView extends StatefulWidget {
+class ForgotPasswordView extends StatefulWidget {
   @override
-  _SignupViewState createState() => _SignupViewState();
+  _ForgotPasswordViewState createState() => _ForgotPasswordViewState();
 }
 
-class _SignupViewState extends State<SignUpView> {
-//used for calendar
+class _ForgotPasswordViewState extends State<ForgotPasswordView> {
+  //used for calendar
   TextEditingController dateinput = TextEditingController();
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _SignupViewState extends State<SignUpView> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 0.0),
+              padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
               child: Center(
                 child: Container(
                   width: 250,
@@ -36,20 +36,18 @@ class _SignupViewState extends State<SignUpView> {
                 ),
               ),
             ),
-            Text('Create Your Account'),
-
+            Text('Forgot Password'),
             Container(
               width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Full Name',
-                    hintText: 'As per goverenment ID card'),
+                    labelText: 'Voter ID',
+                    hintText: 'Enter your voter ID'),
               ),
             ),
-
             Container(
                 width: 300.0,
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -86,44 +84,6 @@ class _SignupViewState extends State<SignUpView> {
                     }
                   },
                 )),
-
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Gender',
-                    hintText: 'Male/Female'),
-              ),
-            ),
-
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Voter ID',
-                  //hintText: ''
-                ),
-              ),
-            ),
-
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
-              ),
-            ),
-
             Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -132,24 +92,21 @@ class _SignupViewState extends State<SignUpView> {
                 obscureText: true,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Password',
-                    hintText: 'Enter secure password'),
+                    labelText: 'Adhar Number',
+                    hintText: 'Enter your adhar number'),
               ),
             ),
-
             Container(
               width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
-                obscureText: true,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Confirm Password',
-                    hintText: 'Re-enter Password'),
+                    labelText: 'District',
+                    hintText: 'Enter your district'),
               ),
             ),
-
             Container(
               height: 50,
               width: 300,
@@ -158,29 +115,14 @@ class _SignupViewState extends State<SignUpView> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, Routes.homeView);
-                  // Navigator.push(
-                  //     context, MaterialPageRoute(builder: (_) => HomeView()));
+                  // Navigator.pushNamed(context, Routes.homeView);
                 },
                 child: Text(
-                  'Sign Up',
+                  'Verify',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
               ),
             ),
-            // SizedBox(
-            //   height: 50,
-            // ),
-            Container(
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.loginView);
-                  },
-                  child: Text(
-                    'Already have an account? Login',
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
-                  )),
-            )
           ],
         ),
       ),
