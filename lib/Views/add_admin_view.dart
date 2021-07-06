@@ -10,6 +10,7 @@ class _AddAdminViewState extends State<AddAdminView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key(Routes.addAdminView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: SingleChildScrollView(
         child: Column(

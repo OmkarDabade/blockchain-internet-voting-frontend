@@ -19,6 +19,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key(Routes.forgotPasswordView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: SingleChildScrollView(
         child: Column(

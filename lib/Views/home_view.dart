@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ivote/App/routes.dart';
 
 import '../App/location.dart';
 
@@ -32,6 +33,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key(Routes.homeView),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

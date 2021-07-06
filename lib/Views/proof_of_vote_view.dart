@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:ivote/App/routes.dart';
 
-class ProofOfVote extends StatefulWidget {
+class ProofOfVoteView extends StatefulWidget {
   @override
   _ProofOfVoteState createState() => _ProofOfVoteState();
 }
 
-class _ProofOfVoteState extends State<ProofOfVote> {
+class _ProofOfVoteState extends State<ProofOfVoteView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key(Routes.proofOfVoteView),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

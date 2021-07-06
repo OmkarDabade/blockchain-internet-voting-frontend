@@ -19,6 +19,7 @@ class _SignupViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key(Routes.signUpView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: SingleChildScrollView(
         child: Column(

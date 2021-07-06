@@ -10,6 +10,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key(Routes.loginView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: SingleChildScrollView(
         child: Column(

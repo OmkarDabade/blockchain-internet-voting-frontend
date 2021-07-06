@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ivote/App/routes.dart';
 
 class AddCandidateView extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class _AddCandidateViewState extends State<AddCandidateView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key(Routes.addCandidateView),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
