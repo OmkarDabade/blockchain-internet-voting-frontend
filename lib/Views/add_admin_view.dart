@@ -16,23 +16,26 @@ class _AddAdminViewState extends State<AddAdminView> {
     return Scaffold(
       key: Key(Routes.addAdminView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
-      body: SingleChildScrollView(
-        child: Form(
-          key: widget.formKey,
+      body: Form(
+        key: widget.formKey,
+        child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
-                child: Center(
-                  child: Container(
-                    width: 250,
-                    height: 150,
-                    child: Image.asset(
-                      'assets/images/voting_logo3.png',
-                      scale: 0.09,
-                    ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+              //   child:
+              Center(
+                child: Container(
+                  width: 250,
+                  height: 150,
+                  child: Image.asset(
+                    'assets/images/voting_logo3.png',
+                    scale: 0.09,
                   ),
                 ),
+                // ),
               ),
               Text('Add Admin'),
               Container(
@@ -40,6 +43,7 @@ class _AddAdminViewState extends State<AddAdminView> {
                 padding: const EdgeInsets.symmetric(vertical: 15.0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (name) {
                     if (name == null || name.isEmpty)
                       return 'Please Enter Name';
@@ -59,6 +63,7 @@ class _AddAdminViewState extends State<AddAdminView> {
                 padding: const EdgeInsets.symmetric(vertical: 15.0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   // obscureText: true,
                   validator: (loginId) {
                     if (loginId == null || loginId.isEmpty)
@@ -81,6 +86,7 @@ class _AddAdminViewState extends State<AddAdminView> {
                 padding: const EdgeInsets.symmetric(vertical: 15.0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   obscureText: true,
                   validator: (password) {
                     if (password == null || password.isEmpty)
@@ -104,11 +110,12 @@ class _AddAdminViewState extends State<AddAdminView> {
                 padding: const EdgeInsets.symmetric(vertical: 15.0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   obscureText: true,
                   validator: (confirmPassword) {
                     if (confirmPassword == null || confirmPassword.isEmpty)
                       return 'Please Enter Password';
-                    else if (_tempPass != confirmPassword)
+                    if (_tempPass != confirmPassword)
                       return 'Password Doesnt match';
 
                     return null;
@@ -135,8 +142,8 @@ class _AddAdminViewState extends State<AddAdminView> {
                       print('Password: $_adminPassword');
 
                       print('Deatils Saved successfully');
-                    }
-                    Navigator.pushNamed(context, Routes.addCandidateView);
+                    } else
+                      print('Validation Failed');
                   },
                   child: Text(
                     'Register',
