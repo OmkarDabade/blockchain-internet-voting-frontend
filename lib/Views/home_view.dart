@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
+import 'package:ivote/Views/proof_of_vote_view.dart';
 
 import '../App/location.dart';
+import 'add_admin_view.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -33,6 +35,48 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Welcome'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'I-Voting',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.how_to_vote_outlined),
+              title: Text('Proof of Vote'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProofOfVoteView()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Add admin'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddAdminView()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       key: Key(Routes.homeView),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

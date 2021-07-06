@@ -90,7 +90,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
-                obscureText: true,
+                obscureText: false,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Adhar Number',
