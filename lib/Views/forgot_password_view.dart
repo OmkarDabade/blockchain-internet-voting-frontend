@@ -9,7 +9,7 @@ class ForgotPasswordView extends StatefulWidget {
 }
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
-  String _voterId, _adharNo, _districtt;
+  String _voterId, _adharNo, _district, _dob;
   //used for calendar
   TextEditingController dateinput = TextEditingController();
   @override
@@ -23,12 +23,15 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     return Scaffold(
       key: Key(Routes.forgotPasswordView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
-              child: Center(
+      body: Form(
+        key: widget.formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
+              //   child:
+              Center(
                 child: Container(
                   width: 250,
                   height: 150,
@@ -38,131 +41,146 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   ),
                 ),
               ),
-            ),
-            Text('Forgot Password'),
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (voterid) {
-                  if (voterid == null || voterid.isEmpty)
-                    return 'Please Enter voter ID';
-                  return null;
-                },
-                onSaved: (voterid) {
-                  if (voterid == null || voterid.isEmpty) _voterId = voterid;
-                },
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Voter ID',
-                    hintText: 'Enter your voter ID'),
+              // ),
+              Text('Forgot Password'),
+              Container(
+                width: 300.0,
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                //padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (voterid) {
+                    if (voterid == null || voterid.isEmpty)
+                      return 'Please Enter voter ID';
+                    return null;
+                  },
+                  onSaved: (voterid) {
+                    if (voterid != null || voterid.isNotEmpty)
+                      _voterId = voterid;
+                  },
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Voter ID',
+                      hintText: 'Enter your voter ID'),
+                ),
               ),
-            ),
-            Container(
+              Container(
+                  width: 300.0,
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: TextFormField(
+                    validator: (dob) {
+                      if (dob == null || dob.isEmpty)
+                        return 'Please Enter voter ID';
+                      return null;
+                    },
+                    onSaved: (dob) {
+                      if (dob != null || dob.isNotEmpty) _dob = dob;
+                    },
+                    controller:
+                        dateinput, //editing controller of this TextField
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Date of Birth"),
+                    readOnly:
+                        true, //set it true, so that user will not able to edit text
+                    onTap: () async {
+                      DateTime pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(
+                              1000), //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime.now() //DateTime(2101)
+                          );
+
+                      if (pickedDate != null) {
+                        print(
+                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                        print(
+                            formattedDate); //formatted date output using intl package =>  2021-03-16
+                        //you can implement different kind of Date Format here according to your requirement
+
+                        setState(() {
+                          dateinput.text =
+                              formattedDate; //set output date to TextField value.
+                        });
+                      } else {
+                        print("Date is not selected");
+                      }
+                    },
+                  )),
+              Container(
+                width: 300.0,
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                //padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (adharno) {
+                    if (adharno == null || adharno.isEmpty)
+                      return 'Please Enter Adhar number';
+                    return null;
+                  },
+                  onSaved: (adharno) {
+                    if (adharno != null || adharno.isNotEmpty)
+                      _adharNo = adharno;
+                  },
+                  obscureText: false,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Adhar Number',
+                      hintText: 'Enter your adhar number'),
+                ),
+              ),
+              Container(
                 width: 300.0,
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: TextField(
-                  controller: dateinput, //editing controller of this TextField
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: "Date of Birth"),
-                  readOnly:
-                      true, //set it true, so that user will not able to edit text
-                  onTap: () async {
-                    DateTime pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(
-                            1000), //DateTime.now() - not to allow to choose before today.
-                        lastDate: DateTime.now() //DateTime(2101)
-                        );
-
-                    if (pickedDate != null) {
-                      print(
-                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                      String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
-                      print(
-                          formattedDate); //formatted date output using intl package =>  2021-03-16
-                      //you can implement different kind of Date Format here according to your requirement
-
-                      setState(() {
-                        dateinput.text =
-                            formattedDate; //set output date to TextField value.
-                      });
-                    } else {
-                      print("Date is not selected");
-                    }
+                //padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (district) {
+                    if (district == null || district.isEmpty)
+                      return 'Please Enter district';
+                    return null;
                   },
-                )),
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (adharno) {
-                  if (adharno == null || adharno.isEmpty)
-                    return 'Please Enter Adhar number';
-                  return null;
-                },
-                onSaved: (adharno) {
-                  if (adharno == null || adharno.isEmpty) _adharNo = adharno;
-                },
-                obscureText: false,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Adhar Number',
-                    hintText: 'Enter your adhar number'),
-              ),
-            ),
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (district) {
-                  if (district == null || district.isEmpty)
-                    return 'Please Enter district';
-                  return null;
-                },
-                onSaved: (district) {
-                  if (district == null || district.isEmpty)
-                    _districtt = district;
-                },
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'District',
-                    hintText: 'Enter your district'),
-              ),
-            ),
-            Container(
-              height: 50,
-              width: 300,
-              margin: EdgeInsets.symmetric(vertical: 35.0),
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                onPressed: () {
-                  if (widget.formKey.currentState.validate()) {
-                    print('Name: $_voterId');
-                    print('LoginId: $_adharNo');
-                    print('Password: $_districtt');
-
-                    print('Deatils Saved successfully');
-                  } else
-                    print('Validation Failed');
-                },
-                child: Text(
-                  'Verify',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  onSaved: (district) {
+                    if (district != null || district.isNotEmpty)
+                      _district = district;
+                  },
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'District',
+                      hintText: 'Enter your district'),
                 ),
-                // Navigator.pushNamed(context, Routes.homeView);
               ),
-            ),
-          ],
+              Container(
+                height: 50,
+                width: 300,
+                margin: EdgeInsets.symmetric(vertical: 35.0),
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
+                child: TextButton(
+                  onPressed: () {
+                    if (widget.formKey.currentState.validate()) {
+                      print('Name: $_voterId');
+                      print('LoginId: $_adharNo');
+                      print('DOB: $_dob');
+                      print('Password: $_district');
+
+                      print('Deatils Saved successfully');
+                    } else
+                      print('Validation Failed');
+                  },
+                  child: Text(
+                    'Verify',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  // Navigator.pushNamed(context, Routes.homeView);
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(

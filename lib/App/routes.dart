@@ -17,7 +17,7 @@ class Routes {
   static const signUpView = 'SignUpPage';
   static const addAdminView = 'AddAdminPage';
   static const forgotPasswordView = 'ForgotPasswordPage';
-  static const adminloginView = 'AdminLoginPage';
+  static const adminLoginView = 'AdminLoginPage';
 
   static Map<String, WidgetBuilder> routes = {
     home: (context) => LoginView(),
@@ -28,6 +28,6 @@ class Routes {
     signUpView: (context) => SignUpView(),
     addAdminView: (context) => AddAdminView(),
     forgotPasswordView: (context) => ForgotPasswordView(),
-    adminloginView: (context) => AdminLoginView(),
+    adminLoginView: (context) => AdminLoginView(),
   };
 }

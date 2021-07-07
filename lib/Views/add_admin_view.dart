@@ -47,10 +47,11 @@ class _AddAdminViewState extends State<AddAdminView> {
                   validator: (name) {
                     if (name == null || name.isEmpty)
                       return 'Please Enter Name';
+
                     return null;
                   },
                   onSaved: (name) {
-                    if (name == null || name.isEmpty) _adminName = name;
+                    if (name != null || name.isNotEmpty) _adminName = name;
                   },
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -72,7 +73,7 @@ class _AddAdminViewState extends State<AddAdminView> {
                     return null;
                   },
                   onSaved: (loginId) {
-                    if (loginId == null || loginId.isEmpty)
+                    if (loginId != null || loginId.isNotEmpty)
                       _adminLoginId = loginId;
                   },
                   decoration: InputDecoration(
@@ -96,7 +97,7 @@ class _AddAdminViewState extends State<AddAdminView> {
                     return null;
                   },
                   onSaved: (password) {
-                    if (password == null || password.isEmpty)
+                    if (password != null || password.isNotEmpty)
                       _adminPassword = password;
                   },
                   decoration: InputDecoration(

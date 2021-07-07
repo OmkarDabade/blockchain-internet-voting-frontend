@@ -11,6 +11,7 @@ class AdminLoginView extends StatefulWidget {
 
 class _AdminLoginViewState extends State<AdminLoginView> {
   String _loginId, _password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,14 +57,17 @@ class _AdminLoginViewState extends State<AdminLoginView> {
           ],
         ),
       ),
-      key: Key(Routes.loginView),
+      key: Key(Routes.adminLoginView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
-              child: Center(
+      body: Form(
+        key: widget.formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 100.0, bottom: 0.0),
+              //   child:
+              Center(
                 child: Container(
                   width: 250,
                   height: 150,
@@ -73,103 +77,106 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                   ),
                 ),
               ),
-            ),
-            Text('Admin Login'),
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (loginid) {
-                  if (loginid == null || loginid.isEmpty)
-                    return 'Please Enter Login ID';
-                  return null;
-                },
-                onSaved: (loginid) {
-                  if (loginid == null || loginid.isEmpty) _loginId = loginid;
-                },
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Login ID',
-                    hintText: 'Enter your Login ID'),
-              ),
-            ),
-            Container(
-              width: 300.0,
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (password) {
-                  if (password == null || password.isEmpty)
-                    return 'Please Enter Password';
-                  return null;
-                },
-                onSaved: (password) {
-                  if (password == null || password.isEmpty)
-                    _password = password;
-                },
-                obscureText: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                    hintText: 'Enter secure password'),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                // ignore: todo
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
-                Navigator.pushNamed(context, Routes.forgotPasswordView);
-              },
-              child: Text(
-                'Forgot Password',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-            ),
-            Container(
-              height: 50,
-              width: 300,
-              margin: EdgeInsets.symmetric(vertical: 35.0),
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                onPressed: () {
-                  if (widget.formKey.currentState.validate()) {
-                    print('Email: $_loginId');
-                    print('Password: $_password');
-
-                    print('Deatils Saved successfully');
-                  } else
-                    print('Validation Failed');
-
-                  Navigator.pushNamed(context, Routes.homeView);
-                },
-                // Navigator.push(
-                //     context, MaterialPageRoute(builder: (_) => HomeView()));
-
-                child: Text(
-                  'Login',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+              // ),
+              Text('Admin Login'),
+              Container(
+                width: 300.0,
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                //padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (loginid) {
+                    if (loginid == null || loginid.isEmpty)
+                      return 'Please Enter Login ID';
+                    return null;
+                  },
+                  onSaved: (loginid) {
+                    if (loginid != null || loginid.isNotEmpty)
+                      _loginId = loginid;
+                  },
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Login ID',
+                      hintText: 'Enter your Login ID'),
                 ),
               ),
-            ),
-            // SizedBox(
-            //   height: 50,
-            // ),
-            Container(
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.signUpView);
+              Container(
+                width: 300.0,
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                //padding: EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (password) {
+                    if (password == null || password.isEmpty)
+                      return 'Please Enter Password';
+                    return null;
                   },
+                  onSaved: (password) {
+                    if (password != null || password.isNotEmpty)
+                      _password = password;
+                  },
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                      hintText: 'Enter secure password'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // ignore: todo
+                  //TODO FORGOT PASSWORD SCREEN GOES HERE
+                  Navigator.pushNamed(context, Routes.forgotPasswordView);
+                },
+                child: Text(
+                  'Forgot Password',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
+              ),
+              Container(
+                height: 50,
+                width: 300,
+                margin: EdgeInsets.symmetric(vertical: 35.0),
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
+                child: TextButton(
+                  onPressed: () {
+                    if (widget.formKey.currentState.validate()) {
+                      print('LoginId: $_loginId');
+                      print('Password: $_password');
+
+                      print('Deatils Saved successfully');
+                    } else
+                      print('Validation Failed');
+
+                    Navigator.pushNamed(context, Routes.homeView);
+                  },
+                  // Navigator.push(
+                  //     context, MaterialPageRoute(builder: (_) => HomeView()));
+
                   child: Text(
-                    'New User? Create Account',
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
-                  )),
-            )
-            // Text('New User? Create Account')
-          ],
+                    'Login',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                ),
+              ),
+              // SizedBox(
+              //   height: 50,
+              // ),
+              Container(
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.signUpView);
+                    },
+                    child: Text(
+                      'New User? Create Account',
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                    )),
+              )
+              // Text('New User? Create Account')
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(

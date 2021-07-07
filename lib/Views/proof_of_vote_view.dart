@@ -89,7 +89,7 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
         height: 50.0,
         width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(12.0),
           color: Colors.grey[400],
         ),
         child: Row(
