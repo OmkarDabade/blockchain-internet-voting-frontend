@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
 
-class SignUpView extends StatefulWidget {
+class VoterSignUpView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   _SignupViewState createState() => _SignupViewState();
 }
 
-class _SignupViewState extends State<SignUpView> {
+class _SignupViewState extends State<VoterSignUpView> {
   String _name, _gender, _voterId, _email, _password, _tempPass;
 //used for calendar
   TextEditingController dateinput = TextEditingController();
@@ -21,7 +21,7 @@ class _SignupViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Key(Routes.signUpView),
+      key: Key(Routes.voterSignUpView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: Form(
         key: widget.formKey,
@@ -250,7 +250,7 @@ class _SignupViewState extends State<SignUpView> {
               Container(
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.loginView);
+                      Navigator.pushNamed(context, Routes.voterLoginView);
                     },
                     child: Text(
                       'Already have an account? Login',

@@ -3,13 +3,13 @@ import 'package:ivote/App/routes.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'add_admin_view.dart';
 
-class LoginView extends StatefulWidget {
+class VoterLoginView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   _LoginViewState createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends State<VoterLoginView> {
   String _voterId, _password;
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
           ],
         ),
       ),
-      key: Key(Routes.loginView),
+      key: Key(Routes.voterLoginView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: Form(
         key: widget.key,
@@ -166,7 +166,7 @@ class _LoginViewState extends State<LoginView> {
               Container(
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.signUpView);
+                      Navigator.pushNamed(context, Routes.voterSignUpView);
                     },
                     child: Text(
                       'New User? Create Account',

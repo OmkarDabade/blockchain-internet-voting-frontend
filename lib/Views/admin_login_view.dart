@@ -150,7 +150,7 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                     } else
                       print('Validation Failed');
 
-                    Navigator.pushNamed(context, Routes.homeView);
+                    Navigator.pushNamed(context, Routes.addCandidateView);
                   },
                   // Navigator.push(
                   //     context, MaterialPageRoute(builder: (_) => HomeView()));
@@ -167,7 +167,7 @@ class _AdminLoginViewState extends State<AdminLoginView> {
               Container(
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.signUpView);
+                      Navigator.pushNamed(context, Routes.voterSignUpView);
                     },
                     child: Text(
                       'New User? Create Account',
