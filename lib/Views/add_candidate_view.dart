@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
 
 class AddCandidateView extends StatefulWidget {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   _AddCandidateViewState createState() => _AddCandidateViewState();
 }
 
 class _AddCandidateViewState extends State<AddCandidateView> {
+  String _candidateName, _candidateParty, _candidateAgenda;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +38,16 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                 width: 500.0,
                 child: Column(
                   children: [
-                    TextField(
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (name) {
+                        if (name == null || name.isEmpty)
+                          return 'Please enter Candidate Name';
+                        return null;
+                      },
+                      onSaved: (name) {
+                        if (name == null || name.isEmpty) _candidateName = name;
+                      },
                       decoration: InputDecoration(
                         labelText: 'Candidate\'s Name',
                         border: OutlineInputBorder(
@@ -47,14 +58,34 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                       scrollPadding: EdgeInsets.all(4.0),
                     ),
                     SizedBox(height: 10.0),
-                    TextField(
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (party) {
+                        if (party == null || party.isEmpty)
+                          return 'Please enter Candidate Party';
+                        return null;
+                      },
+                      onSaved: (party) {
+                        if (party == null || party.isEmpty)
+                          _candidateParty = party;
+                      },
                       decoration: InputDecoration(
                           labelText: 'Candidate\'s Party',
                           border: OutlineInputBorder(
                               borderSide: BorderSide(width: 0.9))),
                     ),
                     SizedBox(height: 10.0),
-                    TextField(
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (agenda) {
+                        if (agenda == null || agenda.isEmpty)
+                          return 'Please Enter Candidate agenda';
+                        return null;
+                      },
+                      onSaved: (agenda) {
+                        if (agenda == null || agenda.isEmpty)
+                          _candidateAgenda = agenda;
+                      },
                       // minLines: 3,
                       maxLines: 4,
                       decoration: InputDecoration(
@@ -74,7 +105,16 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                 const EdgeInsets.symmetric(horizontal: 100.0, vertical: 50.0),
             child: ElevatedButton.icon(
               style: ButtonStyle(),
-              onPressed: () {},
+              onPressed: () {
+                if (widget.formKey.currentState.validate()) {
+                  print('Name: $_candidateName');
+                  print('Party: $_candidateParty');
+                  print('Agenda: $_candidateAgenda');
+
+                  print('Deatils Saved successfully');
+                } else
+                  print('Validation Failed');
+              },
               icon: Icon(Icons.add),
               label: Text('Add Candidate', style: TextStyle(fontSize: 23.0)),
             ),

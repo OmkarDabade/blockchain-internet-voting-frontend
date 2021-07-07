@@ -3,14 +3,14 @@ import 'package:ivote/App/routes.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'add_admin_view.dart';
 
-class LoginView extends StatefulWidget {
+class AdminLoginView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _AdminLoginViewState createState() => _AdminLoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
-  String _email, _password;
+class _AdminLoginViewState extends State<AdminLoginView> {
+  String _loginId, _password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,25 +74,25 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
             ),
-            Text('User Login'),
+            Text('Admin Login'),
             Container(
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (email) {
-                  if (email == null || email.isEmpty)
-                    return 'Please Enter Email';
+                validator: (loginid) {
+                  if (loginid == null || loginid.isEmpty)
+                    return 'Please Enter Login ID';
                   return null;
                 },
-                onSaved: (email) {
-                  if (email == null || email.isEmpty) _email = email;
+                onSaved: (loginid) {
+                  if (loginid == null || loginid.isEmpty) _loginId = loginid;
                 },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                    labelText: 'Login ID',
+                    hintText: 'Enter your Login ID'),
               ),
             ),
             Container(
@@ -137,7 +137,7 @@ class _LoginViewState extends State<LoginView> {
               child: TextButton(
                 onPressed: () {
                   if (widget.formKey.currentState.validate()) {
-                    print('Email: $_email');
+                    print('Email: $_loginId');
                     print('Password: $_password');
 
                     print('Deatils Saved successfully');

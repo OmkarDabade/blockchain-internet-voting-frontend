@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ivote/Views/add_candidate_view.dart';
+import 'package:ivote/Views/admin_login_view.dart';
 import 'package:ivote/Views/home_view.dart';
 import 'package:ivote/Views/login_view.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
@@ -16,6 +17,7 @@ class Routes {
   static const signUpView = 'SignUpPage';
   static const addAdminView = 'AddAdminPage';
   static const forgotPasswordView = 'ForgotPasswordPage';
+  static const adminloginView = 'AdminLoginPage';
 
   static Map<String, WidgetBuilder> routes = {
     home: (context) => LoginView(),
@@ -26,5 +28,6 @@ class Routes {
     signUpView: (context) => SignUpView(),
     addAdminView: (context) => AddAdminView(),
     forgotPasswordView: (context) => ForgotPasswordView(),
+    adminloginView: (context) => AdminLoginView(),
   };
 }

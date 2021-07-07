@@ -3,11 +3,13 @@ import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
 
 class SignUpView extends StatefulWidget {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   _SignupViewState createState() => _SignupViewState();
 }
 
 class _SignupViewState extends State<SignUpView> {
+  String _name, _gender, _voterId, _email, _userPassword, _tempPass;
 //used for calendar
   TextEditingController dateinput = TextEditingController();
   @override
@@ -43,7 +45,15 @@ class _SignupViewState extends State<SignUpView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (name) {
+                  if (name == null || name.isEmpty) return 'Please Enter Name';
+                  return null;
+                },
+                onSaved: (name) {
+                  if (name == null || name.isEmpty) _name = name;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Full Name',
@@ -92,7 +102,16 @@ class _SignupViewState extends State<SignUpView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (gender) {
+                  if (gender == null || gender.isEmpty)
+                    return 'Please Enter Gender';
+                  return null;
+                },
+                onSaved: (gender) {
+                  if (gender == null || gender.isEmpty) _gender = gender;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Gender',
@@ -104,7 +123,16 @@ class _SignupViewState extends State<SignUpView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (voterid) {
+                  if (voterid == null || voterid.isEmpty)
+                    return 'Please Enter Voter ID';
+                  return null;
+                },
+                onSaved: (voterid) {
+                  if (voterid == null || voterid.isEmpty) _voterId = voterid;
+                },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Voter ID',
@@ -117,7 +145,16 @@ class _SignupViewState extends State<SignUpView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (email) {
+                  if (email == null || email.isEmpty)
+                    return 'Please Enter Email';
+                  return null;
+                },
+                onSaved: (email) {
+                  if (email == null || email.isEmpty) _email = email;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
@@ -129,8 +166,20 @@ class _SignupViewState extends State<SignUpView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 obscureText: true,
+                validator: (password) {
+                  if (password == null || password.isEmpty)
+                    return 'Please Enter Password';
+
+                  _tempPass = password;
+                  return null;
+                },
+                onSaved: (password) {
+                  if (password == null || password.isEmpty)
+                    _userPassword = password;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
@@ -142,8 +191,17 @@ class _SignupViewState extends State<SignUpView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 obscureText: true,
+                validator: (confirmPassword) {
+                  if (confirmPassword == null || confirmPassword.isEmpty)
+                    return 'Please Enter Password';
+                  if (_tempPass != confirmPassword)
+                    return 'Password Doesnt match';
+
+                  return null;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Confirm Password',
@@ -159,6 +217,16 @@ class _SignupViewState extends State<SignUpView> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
+                  if (widget.formKey.currentState.validate()) {
+                    print('Name: $_name');
+                    print('Gender: $_gender');
+                    print('VoterID: $_voterId');
+                    print('Email: $_email');
+                    print('Password: $_userPassword');
+
+                    print('Deatils Saved successfully');
+                  } else
+                    print('Validation Failed');
                   Navigator.pushNamed(context, Routes.homeView);
                   // Navigator.push(
                   //     context, MaterialPageRoute(builder: (_) => HomeView()));

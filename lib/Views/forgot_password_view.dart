@@ -3,11 +3,13 @@ import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
 
 class ForgotPasswordView extends StatefulWidget {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   _ForgotPasswordViewState createState() => _ForgotPasswordViewState();
 }
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
+  String _voterId, _adharNo, _districtt;
   //used for calendar
   TextEditingController dateinput = TextEditingController();
   @override
@@ -42,7 +44,16 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (voterid) {
+                  if (voterid == null || voterid.isEmpty)
+                    return 'Please Enter voter ID';
+                  return null;
+                },
+                onSaved: (voterid) {
+                  if (voterid == null || voterid.isEmpty) _voterId = voterid;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Voter ID',
@@ -89,7 +100,16 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 15.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (adharno) {
+                  if (adharno == null || adharno.isEmpty)
+                    return 'Please Enter Adhar number';
+                  return null;
+                },
+                onSaved: (adharno) {
+                  if (adharno == null || adharno.isEmpty) _adharNo = adharno;
+                },
                 obscureText: false,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -101,7 +121,17 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               width: 300.0,
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
+              child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (district) {
+                  if (district == null || district.isEmpty)
+                    return 'Please Enter district';
+                  return null;
+                },
+                onSaved: (district) {
+                  if (district == null || district.isEmpty)
+                    _districtt = district;
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'District',
@@ -116,12 +146,20 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  // Navigator.pushNamed(context, Routes.homeView);
+                  if (widget.formKey.currentState.validate()) {
+                    print('Name: $_voterId');
+                    print('LoginId: $_adharNo');
+                    print('Password: $_districtt');
+
+                    print('Deatils Saved successfully');
+                  } else
+                    print('Validation Failed');
                 },
                 child: Text(
                   'Verify',
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
+                // Navigator.pushNamed(context, Routes.homeView);
               ),
             ),
           ],

@@ -12,7 +12,7 @@ class IVote extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'I-Vote',
-      initialRoute: Routes.addAdminView,
+      initialRoute: Routes.adminloginView,
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

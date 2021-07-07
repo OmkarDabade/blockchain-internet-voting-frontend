@@ -64,16 +64,16 @@ class _HomeViewState extends State<HomeView> {
                 );
               },
             ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Add admin'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddAdminView()),
-                );
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.account_circle),
+            //   title: Text('Add admin'),
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => AddAdminView()),
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
