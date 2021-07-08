@@ -125,7 +125,7 @@ class _LoginViewState extends State<VoterLoginView> {
                 onPressed: () {
                   // ignore: todo
                   //TODO FORGOT PASSWORD SCREEN GOES HERE
-                  Navigator.pushNamed(context, Routes.forgotPasswordView);
+                  Navigator.pushNamed(context, Routes.voterForgotPasswordView);
                 },
                 child: Text(
                   'Forgot Password',
@@ -142,6 +142,8 @@ class _LoginViewState extends State<VoterLoginView> {
                 child: TextButton(
                   onPressed: () {
                     if (widget.formKey.currentState.validate()) {
+                      widget.formKey.currentState.save();
+
                       print('Email: $_voterId');
                       print('Password: $_password');
 

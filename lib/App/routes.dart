@@ -6,7 +6,7 @@ import 'package:ivote/Views/voter_login_view.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'package:ivote/Views/voter_sign_up_view.dart';
 import 'package:ivote/Views/add_admin_view.dart';
-import 'package:ivote/Views/forgot_password_view.dart';
+import 'package:ivote/Views/voter_forgot_password_view.dart';
 
 class Routes {
   static const home = '/';
@@ -16,7 +16,7 @@ class Routes {
   static const addCandidateView = 'AddCandidatePage';
   static const voterSignUpView = 'VoterSignUpPage';
   static const addAdminView = 'AddAdminPage';
-  static const forgotPasswordView = 'ForgotPasswordPage';
+  static const voterForgotPasswordView = 'ForgotPasswordPage';
   static const adminLoginView = 'AdminLoginPage';
 
   static Map<String, WidgetBuilder> routes = {
@@ -27,7 +27,7 @@ class Routes {
     addCandidateView: (context) => AddCandidateView(),
     voterSignUpView: (context) => VoterSignUpView(),
     addAdminView: (context) => AddAdminView(),
-    forgotPasswordView: (context) => ForgotPasswordView(),
+    voterForgotPasswordView: (context) => VoterForgotPasswordView(),
     adminLoginView: (context) => AdminLoginView(),
   };
 }

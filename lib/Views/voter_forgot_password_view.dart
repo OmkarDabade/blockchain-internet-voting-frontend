@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
 
-class ForgotPasswordView extends StatefulWidget {
+class VoterForgotPasswordView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   _ForgotPasswordViewState createState() => _ForgotPasswordViewState();
 }
 
-class _ForgotPasswordViewState extends State<ForgotPasswordView> {
+class _ForgotPasswordViewState extends State<VoterForgotPasswordView> {
   String _voterId, _adharNo, _district, _dob;
   //used for calendar
   TextEditingController dateinput = TextEditingController();
@@ -21,7 +21,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Key(Routes.forgotPasswordView),
+      key: Key(Routes.voterForgotPasswordView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: Form(
         key: widget.formKey,
@@ -163,6 +163,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 child: TextButton(
                   onPressed: () {
                     if (widget.formKey.currentState.validate()) {
+                      widget.formKey.currentState.save();
+
                       print('Name: $_voterId');
                       print('LoginId: $_adharNo');
                       print('DOB: $_dob');

@@ -9,8 +9,8 @@ class AddCandidateView extends StatefulWidget {
 }
 
 class _AddCandidateViewState extends State<AddCandidateView> {
-  String _candidateName, _candidateId;
-  int _ward;
+  String _candidateName, _state, _district;
+  int _ward, _candidateId;
 
   List<String> _states = ["Choose a state"];
   List<String> _districts = ["Choose a district"];
@@ -45,7 +45,7 @@ class _AddCandidateViewState extends State<AddCandidateView> {
           children: [
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 60.0, vertical: 50.0),
+                  const EdgeInsets.symmetric(horizontal: 60.0, vertical: 30.0),
               child: Text(
                 'Add Candidate',
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
@@ -90,13 +90,15 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (candidateId) {
                           if (candidateId == null || candidateId.isEmpty)
-                            return 'Please enter Candidate Party';
+                            return 'Please enter Candidate Id';
+                          if (int.tryParse(candidateId) == null)
+                            return "Please Enter numeric data";
 
                           return null;
                         },
                         onSaved: (candidateId) {
                           if (candidateId != null || candidateId.isNotEmpty)
-                            _candidateId = candidateId;
+                            _candidateId = int.parse(candidateId);
                         },
                         decoration: InputDecoration(
                             labelText: 'Candidate\'s Id',
@@ -105,11 +107,23 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                       ),
                       SizedBox(height: 10.0),
                       Container(
-                        height: 50.0,
+                        height: 60.0,
                         width: 190.0,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
                         child: DropdownButtonFormField<String>(
                           isExpanded: true,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (state) {
+                            if (state == "Choose a state")
+                              return 'Please Select state';
+
+                            return null;
+                          },
+                          onSaved: (state) {
+                            if (state != null ||
+                                state.isNotEmpty && state != "Choose a state")
+                              _state = state;
+                          },
                           items: _states.map((String dropDownStringItem) {
                             return DropdownMenuItem<String>(
                               value: dropDownStringItem,
@@ -123,10 +137,23 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                       SizedBox(height: 10.0),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
-                        height: 50.0,
+                        height: 60.0,
                         width: 190.0,
-                        child: DropdownButton<String>(
+                        child: DropdownButtonFormField<String>(
                           isExpanded: true,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (district) {
+                            if (district == "Choose a district")
+                              return 'Please Select district';
+
+                            return null;
+                          },
+                          onSaved: (district) {
+                            if (district != null ||
+                                district.isNotEmpty &&
+                                    district != "Choose a district")
+                              _district = district;
+                          },
                           items: _districts.map((String dropDownStringItem) {
                             return DropdownMenuItem<String>(
                               value: dropDownStringItem,
@@ -140,10 +167,45 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                       SizedBox(height: 10.0),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
-                        height: 50.0,
+                        height: 60.0,
                         width: 190.0,
-                        child: DropdownButton<String>(
+                        child: DropdownButtonFormField<String>(
                           isExpanded: true,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (ward) {
+                            if (ward == "Choose a ward")
+                              return 'Please Select ward';
+
+                            return null;
+                          },
+                          onSaved: (ward) {
+                            print('SAved Ward');
+                            print(ward);
+
+                            if ((ward != null || ward.isNotEmpty) &&
+                                ward != "Choose a ward") {
+                              switch (ward) {
+                                case "Ward 1":
+                                  _ward = 1;
+                                  break;
+                                case "Ward 2":
+                                  _ward = 2;
+                                  break;
+                                case "Ward 3":
+                                  _ward = 3;
+                                  break;
+                                case "Ward 4":
+                                  _ward = 4;
+                                  break;
+                                case "Ward 5":
+                                  _ward = 5;
+                                  break;
+                                case "Ward 6":
+                                  _ward = 6;
+                                  break;
+                              }
+                            }
+                          },
                           items: _wards.map((String dropDownStringItem) {
                             return DropdownMenuItem<String>(
                               value: dropDownStringItem,
@@ -168,11 +230,13 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                 style: ButtonStyle(),
                 onPressed: () {
                   if (widget.formKey.currentState.validate()) {
+                    widget.formKey.currentState.save();
+
                     print('Name: $_candidateName');
                     print('Id : $_candidateId');
 
-                    print('State : $_selectedState');
-                    print('District: $_selectedDistrict');
+                    print('State : $_state');
+                    print('District: $_district');
                     print('Ward : $_ward');
 
                     print('Deatils Saved successfully');
@@ -214,26 +278,6 @@ class _AddCandidateViewState extends State<AddCandidateView> {
   }
 
   void _onSelectedWard(String value) {
-    switch (value) {
-      case "Ward 1":
-        _ward = 1;
-        break;
-      case "Ward 2":
-        _ward = 2;
-        break;
-      case "Ward 3":
-        _ward = 3;
-        break;
-      case "Ward 4":
-        _ward = 4;
-        break;
-      case "Ward 5":
-        _ward = 5;
-        break;
-      case "Ward 6":
-        _ward = 6;
-        break;
-    }
     setState(() => _selectedWard = value);
   }
 }
