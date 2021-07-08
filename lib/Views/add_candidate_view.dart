@@ -108,7 +108,7 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                         height: 50.0,
                         width: 190.0,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: DropdownButton<String>(
+                        child: DropdownButtonFormField<String>(
                           isExpanded: true,
                           items: _states.map((String dropDownStringItem) {
                             return DropdownMenuItem<String>(
