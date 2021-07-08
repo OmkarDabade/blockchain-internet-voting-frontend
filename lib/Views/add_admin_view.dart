@@ -138,6 +138,8 @@ class _AddAdminViewState extends State<AddAdminView> {
                 child: TextButton(
                   onPressed: () {
                     if (widget.formKey.currentState.validate()) {
+                      widget.formKey.currentState.save();
+
                       print('Name: $_adminName');
                       print('LoginId: $_adminLoginId');
                       print('Password: $_adminPassword');

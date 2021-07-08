@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ivote/App/location.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
 
@@ -9,12 +10,32 @@ class VoterSignUpView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<VoterSignUpView> {
+  String _state, _district;
+  int _ward;
+
   String _name, _gender, _voterId, _email, _password, _tempPass, _dateOfBirth;
 //used for calendar
   TextEditingController dateinput = TextEditingController();
+
+  List<String> _states = ["Choose a state"];
+  List<String> _districts = ["Choose a district"];
+  List<String> _wards = [
+    "Choose a ward",
+    "Ward 1",
+    "Ward 2",
+    "Ward 3",
+    "Ward 4",
+    "Ward 5",
+    "Ward 6"
+  ];
+  String _selectedState = "Choose a state";
+  String _selectedDistrict = "Choose a district";
+  String _selectedWard = "Choose a ward";
+
   @override
   void initState() {
     dateinput.text = ""; //set the initial value of text field
+    _states = List.from(_states)..addAll(Location.getAllStates());
     super.initState();
   }
 
@@ -157,6 +178,117 @@ class _SignupViewState extends State<VoterSignUpView> {
               ),
 
               Container(
+                height: 90.0,
+                width: 300.0,
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                // margin: EdgeInsets.symmetric(horizontal: 10.0),
+                child: DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (state) {
+                    if (state == "Choose a state") return 'Please Select state';
+
+                    return null;
+                  },
+                  onSaved: (state) {
+                    if (state != null ||
+                        state.isNotEmpty && state != "Choose a state")
+                      _state = state;
+                  },
+                  items: _states.map((String dropDownStringItem) {
+                    return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(dropDownStringItem),
+                    );
+                  }).toList(),
+                  onChanged: (value) => _onSelectedState(value),
+                  value: _selectedState,
+                ),
+              ),
+
+              Container(
+                // margin: EdgeInsets.symmetric(horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                height: 90.0,
+                width: 300.0,
+                child: DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (district) {
+                    if (district == "Choose a district")
+                      return 'Please Select district';
+
+                    return null;
+                  },
+                  onSaved: (district) {
+                    if (district != null ||
+                        district.isNotEmpty && district != "Choose a district")
+                      _district = district;
+                  },
+                  items: _districts.map((String dropDownStringItem) {
+                    return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(dropDownStringItem),
+                    );
+                  }).toList(),
+                  onChanged: (value) => _onSelectedDistrict(value),
+                  value: _selectedDistrict,
+                ),
+              ),
+
+              Container(
+                // margin: EdgeInsets.symmetric(horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                height: 90.0,
+                width: 300.0,
+                child: DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (ward) {
+                    if (ward == "Choose a ward") return 'Please Select ward';
+
+                    return null;
+                  },
+                  onSaved: (ward) {
+                    print('SAved Ward');
+                    print(ward);
+
+                    if ((ward != null || ward.isNotEmpty) &&
+                        ward != "Choose a ward") {
+                      switch (ward) {
+                        case "Ward 1":
+                          _ward = 1;
+                          break;
+                        case "Ward 2":
+                          _ward = 2;
+                          break;
+                        case "Ward 3":
+                          _ward = 3;
+                          break;
+                        case "Ward 4":
+                          _ward = 4;
+                          break;
+                        case "Ward 5":
+                          _ward = 5;
+                          break;
+                        case "Ward 6":
+                          _ward = 6;
+                          break;
+                      }
+                    }
+                  },
+                  items: _wards.map((String dropDownStringItem) {
+                    return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(dropDownStringItem),
+                    );
+                  }).toList(),
+                  onChanged: (value) => _onSelectedWard(value),
+                  value: _selectedWard,
+                ),
+              ),
+
+              Container(
                 width: 300.0,
                 padding: const EdgeInsets.symmetric(vertical: 15.0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
@@ -234,19 +366,25 @@ class _SignupViewState extends State<VoterSignUpView> {
                 child: TextButton(
                   onPressed: () {
                     if (widget.formKey.currentState.validate()) {
+                      widget.formKey.currentState.save();
+
                       print('Name: $_name');
                       print('Date of Birth: $_dateOfBirth');
                       print('Gender: $_gender');
                       print('VoterID: $_voterId');
+
+                      print('State: $_state');
+                      print('District: $_district');
+                      print('Ward: $_ward');
+
                       print('Email: $_email');
                       print('Password: $_password');
 
                       print('Deatils Saved successfully');
+
+                      // Navigator.pushNamed(context, Routes.homeView);
                     } else
                       print('Validation Failed');
-                    Navigator.pushNamed(context, Routes.homeView);
-                    // Navigator.push(
-                    //     context, MaterialPageRoute(builder: (_) => HomeView()));
                   },
                   child: Text(
                     'Sign Up',
@@ -284,5 +422,23 @@ class _SignupViewState extends State<VoterSignUpView> {
                 ),
               ))),
     );
+  }
+
+  void _onSelectedState(String value) {
+    setState(() {
+      _selectedDistrict = "Choose a district";
+      _districts = ["Choose a district"];
+      _selectedState = value;
+      _districts = List.from(_districts)
+        ..addAll(Location.getLocalByState(value));
+    });
+  }
+
+  void _onSelectedDistrict(String value) {
+    setState(() => _selectedDistrict = value);
+  }
+
+  void _onSelectedWard(String value) {
+    setState(() => _selectedWard = value);
   }
 }
