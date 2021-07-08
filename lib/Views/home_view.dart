@@ -3,7 +3,6 @@ import 'package:ivote/App/routes.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
 
 import '../App/location.dart';
-import 'add_admin_view.dart';
 
 class HomeView extends StatefulWidget {
   @override

@@ -9,7 +9,7 @@ class AddCandidateView extends StatefulWidget {
 }
 
 class _AddCandidateViewState extends State<AddCandidateView> {
-  String _candidateName, _candidateId, _state, _district;
+  String _candidateName, _candidateId;
   int _ward;
 
   List<String> _states = ["Choose a state"];

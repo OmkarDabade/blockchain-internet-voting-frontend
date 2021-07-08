@@ -9,7 +9,7 @@ class VoterSignUpView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<VoterSignUpView> {
-  String _name, _gender, _voterId, _email, _password, _tempPass;
+  String _name, _gender, _voterId, _email, _password, _tempPass, _dateOfBirth;
 //used for calendar
   TextEditingController dateinput = TextEditingController();
   @override
@@ -67,14 +67,23 @@ class _SignupViewState extends State<VoterSignUpView> {
               Container(
                   width: 300.0,
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: TextField(
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (dob) {
+                      if (dob == null || dob.isEmpty)
+                        return 'Please Enter Date of Birth';
+                      return null;
+                    },
+                    onSaved: (dob) {
+                      if (dob != null || dob.isNotEmpty) _dateOfBirth = dob;
+                    },
                     controller:
                         dateinput, //editing controller of this TextField
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Date of Birth"),
                     readOnly:
-                        true, //set it true, so that user will not able to edit text
+                        false, //set it true, so that user will not able to edit text
                     onTap: () async {
                       DateTime pickedDate = await showDatePicker(
                           context: context,
@@ -226,6 +235,7 @@ class _SignupViewState extends State<VoterSignUpView> {
                   onPressed: () {
                     if (widget.formKey.currentState.validate()) {
                       print('Name: $_name');
+                      print('Date of Birth: $_dateOfBirth');
                       print('Gender: $_gender');
                       print('VoterID: $_voterId');
                       print('Email: $_email');
