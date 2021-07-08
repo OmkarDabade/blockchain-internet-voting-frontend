@@ -70,7 +70,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   child: TextFormField(
                     validator: (dob) {
                       if (dob == null || dob.isEmpty)
-                        return 'Please Enter voter ID';
+                        return 'Please Enter Date of Birth';
                       return null;
                     },
                     onSaved: (dob) {
@@ -82,7 +82,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         border: OutlineInputBorder(),
                         labelText: "Date of Birth"),
                     readOnly:
-                        true, //set it true, so that user will not able to edit text
+                        false, //set it true, so that user will not able to edit text
                     onTap: () async {
                       DateTime pickedDate = await showDatePicker(
                           context: context,
