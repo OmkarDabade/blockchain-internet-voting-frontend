@@ -69,156 +69,192 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                   width: 500.0,
                   child: Column(
                     children: [
-                      TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (name) {
-                          if (name == null || name.isEmpty)
-                            return 'Please enter Candidate Name';
+                      Container(
+                        height: 70,
+                        width: 480,
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (name) {
+                            if (name == null || name.isEmpty)
+                              return 'Please enter Candidate Name';
 
-                          return null;
-                        },
-                        onSaved: (name) {
-                          if (name != null || name.isNotEmpty)
-                            _candidateName = name;
-                        },
-                        decoration: InputDecoration(
-                          labelText: 'Candidate\'s Name',
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(width: 0.9),
-                          ),
-                          // contentPadding: EdgeInsets.all(4.0),
-                        ),
-                        scrollPadding: EdgeInsets.all(4.0),
-                      ),
-                      SizedBox(height: 10.0),
-                      TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (candidateId) {
-                          if (candidateId == null || candidateId.isEmpty)
-                            return 'Please enter Candidate Id';
-                          if (int.tryParse(candidateId) == null)
-                            return "Please Enter numeric data";
-
-                          return null;
-                        },
-                        onSaved: (candidateId) {
-                          if (candidateId != null || candidateId.isNotEmpty)
-                            _candidateId = int.parse(candidateId);
-                        },
-                        decoration: InputDecoration(
-                            labelText: 'Candidate\'s Id',
+                            return null;
+                          },
+                          onSaved: (name) {
+                            if (name != null || name.isNotEmpty)
+                              _candidateName = name;
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Candidate\'s Name',
                             border: OutlineInputBorder(
-                                borderSide: BorderSide(width: 0.9))),
+                              borderSide: BorderSide(width: 0.9),
+                            ),
+                            // contentPadding: EdgeInsets.all(4.0),
+                          ),
+                          scrollPadding: EdgeInsets.all(4.0),
+                        ),
                       ),
-                      SizedBox(height: 10.0),
                       Container(
-                        height: 60.0,
-                        width: 190.0,
-                        margin: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: DropdownButtonFormField<String>(
-                          isExpanded: true,
+                        height: 70,
+                        width: 480,
+                        child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (state) {
-                            if (state == "Choose a state")
-                              return 'Please Select state';
+                          validator: (candidateId) {
+                            if (candidateId == null || candidateId.isEmpty)
+                              return 'Please enter Candidate Id';
+                            if (int.tryParse(candidateId) == null)
+                              return "Please Enter numeric data";
 
                             return null;
                           },
-                          onSaved: (state) {
-                            if (state != null ||
-                                state.isNotEmpty && state != "Choose a state")
-                              _state = state;
+                          onSaved: (candidateId) {
+                            if (candidateId != null || candidateId.isNotEmpty)
+                              _candidateId = int.parse(candidateId);
                           },
-                          items: _states.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                              value: dropDownStringItem,
-                              child: Text(dropDownStringItem),
-                            );
-                          }).toList(),
-                          onChanged: (value) => _onSelectedState(value),
-                          value: _selectedState,
+                          decoration: InputDecoration(
+                              labelText: 'Candidate\'s Id',
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(width: 0.9))),
+                        ),
+                      ),
+                      Container(
+                        height: 70.0,
+                        width: 500.0,
+                        margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelStyle: Theme.of(context)
+                                  .primaryTextTheme
+                                  .caption
+                                  .copyWith(color: Colors.black),
+                              border: const OutlineInputBorder(),
+                            ),
+                            isExpanded: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (state) {
+                              if (state == "Choose a state")
+                                return 'Please Select state';
+
+                              return null;
+                            },
+                            onSaved: (state) {
+                              if (state != null ||
+                                  state.isNotEmpty && state != "Choose a state")
+                                _state = state;
+                            },
+                            items: _states.map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownStringItem,
+                                child: Text(dropDownStringItem),
+                              );
+                            }).toList(),
+                            onChanged: (value) => _onSelectedState(value),
+                            value: _selectedState,
+                          ),
                         ),
                       ),
                       SizedBox(height: 10.0),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
-                        height: 60.0,
-                        width: 190.0,
-                        child: DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (district) {
-                            if (district == "Choose a district")
-                              return 'Please Select district';
+                        height: 70.0,
+                        width: 500.0,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelStyle: Theme.of(context)
+                                  .primaryTextTheme
+                                  .caption
+                                  .copyWith(color: Colors.black),
+                              border: const OutlineInputBorder(),
+                            ),
+                            isExpanded: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (district) {
+                              if (district == "Choose a district")
+                                return 'Please Select district';
 
-                            return null;
-                          },
-                          onSaved: (district) {
-                            if (district != null ||
-                                district.isNotEmpty &&
-                                    district != "Choose a district")
-                              _district = district;
-                          },
-                          items: _districts.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                              value: dropDownStringItem,
-                              child: Text(dropDownStringItem),
-                            );
-                          }).toList(),
-                          onChanged: (value) => _onSelectedDistrict(value),
-                          value: _selectedDistrict,
+                              return null;
+                            },
+                            onSaved: (district) {
+                              if (district != null ||
+                                  district.isNotEmpty &&
+                                      district != "Choose a district")
+                                _district = district;
+                            },
+                            items: _districts.map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownStringItem,
+                                child: Text(dropDownStringItem),
+                              );
+                            }).toList(),
+                            onChanged: (value) => _onSelectedDistrict(value),
+                            value: _selectedDistrict,
+                          ),
                         ),
                       ),
                       SizedBox(height: 10.0),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
-                        height: 60.0,
-                        width: 190.0,
-                        child: DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (ward) {
-                            if (ward == "Choose a ward")
-                              return 'Please Select ward';
+                        height: 70.0,
+                        width: 500.0,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              labelStyle: Theme.of(context)
+                                  .primaryTextTheme
+                                  .caption
+                                  .copyWith(color: Colors.black),
+                              border: const OutlineInputBorder(),
+                            ),
+                            isExpanded: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (ward) {
+                              if (ward == "Choose a ward")
+                                return 'Please Select ward';
 
-                            return null;
-                          },
-                          onSaved: (ward) {
-                            print('SAved Ward');
-                            print(ward);
+                              return null;
+                            },
+                            onSaved: (ward) {
+                              print('SAved Ward');
+                              print(ward);
 
-                            if ((ward != null || ward.isNotEmpty) &&
-                                ward != "Choose a ward") {
-                              switch (ward) {
-                                case "Ward 1":
-                                  _ward = 1;
-                                  break;
-                                case "Ward 2":
-                                  _ward = 2;
-                                  break;
-                                case "Ward 3":
-                                  _ward = 3;
-                                  break;
-                                case "Ward 4":
-                                  _ward = 4;
-                                  break;
-                                case "Ward 5":
-                                  _ward = 5;
-                                  break;
-                                case "Ward 6":
-                                  _ward = 6;
-                                  break;
+                              if ((ward != null || ward.isNotEmpty) &&
+                                  ward != "Choose a ward") {
+                                switch (ward) {
+                                  case "Ward 1":
+                                    _ward = 1;
+                                    break;
+                                  case "Ward 2":
+                                    _ward = 2;
+                                    break;
+                                  case "Ward 3":
+                                    _ward = 3;
+                                    break;
+                                  case "Ward 4":
+                                    _ward = 4;
+                                    break;
+                                  case "Ward 5":
+                                    _ward = 5;
+                                    break;
+                                  case "Ward 6":
+                                    _ward = 6;
+                                    break;
+                                }
                               }
-                            }
-                          },
-                          items: _wards.map((String dropDownStringItem) {
-                            return DropdownMenuItem<String>(
-                              value: dropDownStringItem,
-                              child: Text(dropDownStringItem),
-                            );
-                          }).toList(),
-                          onChanged: (value) => _onSelectedWard(value),
-                          value: _selectedWard,
+                            },
+                            items: _wards.map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownStringItem,
+                                child: Text(dropDownStringItem),
+                              );
+                            }).toList(),
+                            onChanged: (value) => _onSelectedWard(value),
+                            value: _selectedWard,
+                          ),
                         ),
                       ),
                     ],

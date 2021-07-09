@@ -1,7 +1,7 @@
 import 'dart:io';
 
 const String hostUrl = '127.0.0.1';
-const int hostUrlPort = 5123;
+const int hostUrlPort = 5000;
 
 //'http://127.0.0.1:5132/'
 const String baseAPIUrl = 'http://$hostUrl:$hostUrlPort/';
