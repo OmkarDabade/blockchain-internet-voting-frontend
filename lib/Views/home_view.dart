@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
+import 'package:ivote/App/voter_data.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
-
-import '../App/location.dart';
+import 'package:http/http.dart' as http;
+import 'package:ivote/model/candidate.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -10,24 +13,15 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  List<String> _states = ["Choose a state"];
-  List<String> _districts = ["Choose a district"];
-  List<String> _wards = [
-    "Choose a ward",
-    "Ward 1",
-    "Ward 2",
-    "Ward 3",
-    "Ward 4",
-    "Ward 5",
-    "Ward 6"
-  ];
-  String _selectedState = "Choose a state";
-  String _selectedDistrict = "Choose a district";
-  String _selectedWard = "Choose a ward";
+  List<Candidate> candidateList;
+  Map<String, dynamic> candidateListInJson;
+  bool isLoaded;
 
   @override
   void initState() {
-    _states = List.from(_states)..addAll(Location.getAllStates());
+    isLoaded = false;
+    candidateList = [];
+    getCandidateList();
     super.initState();
   }
 
@@ -80,90 +74,24 @@ class _HomeViewState extends State<HomeView> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            height: 70.0,
-            width: double.infinity,
-            color: Colors.orange[200],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  height: 50.0,
-                  width: 190.0,
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    items: _states.map((String dropDownStringItem) {
-                      return DropdownMenuItem<String>(
-                        value: dropDownStringItem,
-                        child: Text(dropDownStringItem),
-                      );
-                    }).toList(),
-                    onChanged: (value) => _onSelectedState(value),
-                    value: _selectedState,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  height: 50.0,
-                  width: 190.0,
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    items: _districts.map((String dropDownStringItem) {
-                      return DropdownMenuItem<String>(
-                        value: dropDownStringItem,
-                        child: Text(dropDownStringItem),
-                      );
-                    }).toList(),
-                    // onChanged: (value) => print(value),
-                    onChanged: (value) => _onSelectedDistrict(value),
-                    value: _selectedDistrict,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  height: 50.0,
-                  width: 190.0,
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    items: _wards.map((String dropDownStringItem) {
-                      return DropdownMenuItem<String>(
-                        value: dropDownStringItem,
-                        child: Text(dropDownStringItem),
-                      );
-                    }).toList(),
-                    // onChanged: (value) => print(value),
-                    onChanged: (value) => _onSelectedWard(value),
-                    value: _selectedWard,
-                  ),
-                ),
-                Container(
-                  height: 35.0,
-                  width: 140.0,
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      onPrimary: Colors.black,
-                      shadowColor: Colors.black,
-                      elevation: 10,
-                    ),
-                    onPressed: () {},
-                    icon: Icon(Icons.search_sharp),
-                    label: Text('Search', style: TextStyle(fontSize: 18.0)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) => _candidateDetailsBlock(
-                    candidateName: 'Candidate Name $index',
-                    candidateParty: 'Candidate Party $index')),
-          )
+          isLoaded
+              ? candidateList.isEmpty
+                  ? Center(
+                      child: Text('No Candidates in your ward'),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                          itemCount: candidateList.length,
+                          itemBuilder: (context, index) =>
+                              _candidateDetailsBlock(
+                                candidateName:
+                                    candidateList[index].candidateName,
+                                candidateId: candidateList[index].candidateId,
+                              )),
+                    )
+              : Center(
+                  child: CircularProgressIndicator(),
+                )
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -179,27 +107,9 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  void _onSelectedState(String value) {
-    setState(() {
-      _selectedDistrict = "Choose a district";
-      _districts = ["Choose a district"];
-      _selectedState = value;
-      _districts = List.from(_districts)
-        ..addAll(Location.getLocalByState(value));
-    });
-  }
-
-  void _onSelectedDistrict(String value) {
-    setState(() => _selectedDistrict = value);
-  }
-
-  void _onSelectedWard(String value) {
-    setState(() => _selectedWard = value);
-  }
-
   Widget _candidateDetailsBlock({
     @required String candidateName,
-    @required String candidateParty,
+    @required int candidateId,
   }) =>
       Container(
         margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 200.0),
@@ -230,7 +140,7 @@ class _HomeViewState extends State<HomeView> {
                       style: TextStyle(
                           fontSize: 21.0, fontWeight: FontWeight.bold)),
                   SizedBox(height: 25.0),
-                  Text('Candidate\'s Party: $candidateParty',
+                  Text('Candidate Id: $candidateId',
                       style: TextStyle(fontSize: 21.0)),
                 ],
               ),
@@ -255,7 +165,26 @@ class _HomeViewState extends State<HomeView> {
                         shadowColor: Colors.orange[400],
                         elevation: 10,
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        String jsonBody = json.encode({
+                          'candidateId': candidateId,
+                          'candidateName': candidateName,
+                          'voterId': kVoterId,
+                        });
+
+                        http.Response response = await http.post(
+                            Uri(
+                              host: hostUrl,
+                              port: hostUrlPort,
+                              path: apiCastVote,
+                              // scheme: 'http',
+                            ),
+                            headers: postHeadersWithJWT(kVoterJWTToken),
+                            body: jsonBody);
+
+                        print('RESPONSE: ');
+                        print(response.body);
+                      },
                       icon: Icon(Icons.thumb_up_outlined),
                       label: Text('Vote', style: TextStyle(fontSize: 19.0)),
                     ),
@@ -266,4 +195,49 @@ class _HomeViewState extends State<HomeView> {
           ],
         ),
       );
+
+  void getCandidateList() async {
+    print('Get cAndiates called');
+
+    candidateList = [];
+    Map<String, dynamic> jsonData = {};
+
+    if (kState != null && kState.isNotEmpty) jsonData['state'] = kState;
+    if (kDistrict != null && kDistrict.isNotEmpty)
+      jsonData['district'] = kDistrict;
+    if (kWard != null) jsonData['ward'] = kWard;
+
+    print('requesting server');
+
+    http.Response response = await http.post(
+        Uri(
+          // queryParameters: jsonData,
+          host: hostUrl,
+          port: hostUrlPort,
+          path: apiGetCandidates,
+          // scheme: 'http',
+        ),
+        headers: postHeadersWithJWT(kVoterJWTToken),
+        body: json.encode(jsonData));
+
+    print('GET CANDIDATES RESPONSE: ');
+    print(response.body);
+
+    candidateListInJson = jsonDecode(response.body);
+
+    if (candidateListInJson['result'] != null &&
+        candidateListInJson['result']) {
+      for (Map<String, dynamic> vote in candidateListInJson['candidates']) {
+        candidateList.add(Candidate.fromJson(vote));
+      }
+
+      print('Successfully loaded candidates list data');
+    } else {
+      print('failed to load candidates list data');
+    }
+
+    setState(() {
+      isLoaded = true;
+    });
+  }
 }

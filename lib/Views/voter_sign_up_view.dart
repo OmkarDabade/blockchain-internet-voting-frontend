@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/location.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
@@ -11,9 +14,9 @@ class VoterSignUpView extends StatefulWidget {
 
 class _SignupViewState extends State<VoterSignUpView> {
   String _state, _district;
-  int _ward;
+  int _ward, _mobileNo;
 
-  String _name, _gender, _voterId, _email, _password, _tempPass, _dateOfBirth;
+  String _name, _gender, _voterId, _password, _tempPass, _dateOfBirth;
 //used for calendar
   TextEditingController dateinput = TextEditingController();
 
@@ -294,18 +297,22 @@ class _SignupViewState extends State<VoterSignUpView> {
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (email) {
-                    if (email == null || email.isEmpty)
-                      return 'Please Enter Email';
+                  keyboardType: TextInputType.phone,
+                  validator: (mobileNo) {
+                    if (mobileNo == null || mobileNo.isEmpty)
+                      return 'Please Enter Mobile No.';
+                    if (int.tryParse(mobileNo) == null)
+                      return 'Please Enter only digits';
                     return null;
                   },
-                  onSaved: (email) {
-                    if (email != null || email.isNotEmpty) _email = email;
+                  onSaved: (mobileNo) {
+                    if (mobileNo != null || mobileNo.isNotEmpty)
+                      _mobileNo = int.parse(mobileNo);
                   },
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      hintText: 'Enter valid email id as abc@gmail.com'),
+                      labelText: 'Mobile No',
+                      hintText: 'Enter valid mobile no'),
                 ),
               ),
 
@@ -364,7 +371,7 @@ class _SignupViewState extends State<VoterSignUpView> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.formKey.currentState.validate()) {
                       widget.formKey.currentState.save();
 
@@ -377,10 +384,31 @@ class _SignupViewState extends State<VoterSignUpView> {
                       print('District: $_district');
                       print('Ward: $_ward');
 
-                      print('Email: $_email');
+                      print('Mobile: $_mobileNo');
                       print('Password: $_password');
 
-                      print('Deatils Saved successfully');
+                      String jsonBody = json.encode({
+                        'voterId': _voterId,
+                        'name': _name,
+                        'state': _state,
+                        'district': _district,
+                        'ward': _ward,
+                        'mobile': _mobileNo,
+                        'password': _password
+                      });
+
+                      http.Response response = await http.post(
+                          Uri(
+                            host: hostUrl,
+                            port: hostUrlPort,
+                            path: apiSignup,
+                            // scheme: 'http',
+                          ),
+                          headers: postHeaders,
+                          body: jsonBody);
+
+                      print('RESPONSE: ');
+                      print(response.body);
 
                       // Navigator.pushNamed(context, Routes.homeView);
                     } else

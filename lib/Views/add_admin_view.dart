@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
+import 'package:http/http.dart' as http;
 
 class AddAdminView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -136,7 +140,7 @@ class _AddAdminViewState extends State<AddAdminView> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.formKey.currentState.validate()) {
                       widget.formKey.currentState.save();
 
@@ -144,7 +148,24 @@ class _AddAdminViewState extends State<AddAdminView> {
                       print('LoginId: $_adminLoginId');
                       print('Password: $_adminPassword');
 
-                      print('Deatils Saved successfully');
+                      String jsonBody = json.encode({
+                        'loginId': _adminLoginId,
+                        'name': _adminName,
+                        'password': _adminPassword
+                      });
+
+                      http.Response response = await http.post(
+                          Uri(
+                            host: hostUrl,
+                            port: hostUrlPort,
+                            path: apiSignup,
+                            // scheme: 'http',
+                          ),
+                          headers: postHeaders,
+                          body: jsonBody);
+
+                      print('RESPONSE: ');
+                      print(response.body);
                     } else
                       print('Validation Failed');
                   },

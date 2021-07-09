@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
+import 'package:ivote/App/voter_data.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'add_admin_view.dart';
 
@@ -37,20 +41,28 @@ class _LoginViewState extends State<VoterLoginView> {
               leading: Icon(Icons.how_to_vote_outlined),
               title: Text('Proof of Vote'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProofOfVoteView()),
-                );
+                Navigator.pushNamed(context, Routes.proofOfVoteView);
               },
             ),
             ListTile(
               leading: Icon(Icons.account_circle),
               title: Text('Add admin'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddAdminView()),
-                );
+                Navigator.pushNamed(context, Routes.addAdminView);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Admin Login'),
+              onTap: () {
+                Navigator.pushNamed(context, Routes.adminLoginView);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Voter Signup'),
+              onTap: () {
+                Navigator.pushNamed(context, Routes.voterSignUpView);
               },
             ),
           ],
@@ -59,7 +71,7 @@ class _LoginViewState extends State<VoterLoginView> {
       key: Key(Routes.voterLoginView),
       backgroundColor: Color.fromRGBO(243, 243, 243, 100),
       body: Form(
-        key: widget.key,
+        key: widget.formKey,
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -86,7 +98,7 @@ class _LoginViewState extends State<VoterLoginView> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (voterId) {
                     if (voterId == null || voterId.isEmpty)
-                      return 'Please Enter Email';
+                      return 'Please Enter VoterId';
                     return null;
                   },
                   onSaved: (voterId) {
@@ -140,22 +152,42 @@ class _LoginViewState extends State<VoterLoginView> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.formKey.currentState.validate()) {
                       widget.formKey.currentState.save();
 
-                      print('Email: $_voterId');
+                      print('Voter Id: $_voterId');
                       print('Password: $_password');
 
-                      print('Deatils Saved successfully');
+                      String jsonBody = json
+                          .encode({'voterId': _voterId, 'password': _password});
+
+                      http.Response response = await http.post(
+                          Uri(
+                            host: hostUrl,
+                            port: hostUrlPort,
+                            path: apiLogin,
+                            // scheme: 'http',
+                          ),
+                          headers: postHeaders,
+                          body: jsonBody);
+
+                      print('RESPONSE: ');
+                      print(response.body);
+
+                      Map<String, dynamic> decodedJsonData =
+                          jsonDecode(response.body);
+
+                      if (decodedJsonData['isVoteCasted']) {
+                        // ShowDialog
+                        print('Vote ALready Casted');
+                      } else {
+                        extractVoterData(decodedJsonData);
+                        Navigator.pushNamed(context, Routes.homeView);
+                      }
                     } else
                       print('Validation Failed');
-
-                    Navigator.pushNamed(context, Routes.homeView);
                   },
-                  // Navigator.push(
-                  //     context, MaterialPageRoute(builder: (_) => HomeView()));
-
                   child: Text(
                     'Login',
                     style: TextStyle(color: Colors.white, fontSize: 25),
