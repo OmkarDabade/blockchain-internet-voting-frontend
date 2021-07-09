@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:intl/intl.dart';
+import 'package:ivote/App/location.dart';
 
 class VoterSignUpView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -10,6 +11,19 @@ class VoterSignUpView extends StatefulWidget {
 
 class _SignupViewState extends State<VoterSignUpView> {
   String _name, _gender, _voterId, _email, _password, _tempPass, _dateOfBirth;
+
+  List<String> _states = ["Choose a state"];
+  List<String> _districts = ["Choose a district"];
+
+  String _selectedState = "Choose a state";
+  String _selectedDistrict = "Choose a district";
+
+  @override
+  void initState() {
+    _states = List.from(_states)..addAll(Location.getAllStates());
+    super.initState();
+  }
+
 //used for calendar
   TextEditingController dateinput = TextEditingController();
   @override
@@ -155,6 +169,41 @@ class _SignupViewState extends State<VoterSignUpView> {
                   ),
                 ),
               ),
+              SizedBox(height: 10.0),
+              Container(
+                height: 50.0,
+                width: 190.0,
+                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                child: DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  items: _states.map((String dropDownStringItem) {
+                    return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(dropDownStringItem),
+                    );
+                  }).toList(),
+                  onChanged: (value) => _onSelectedState(value),
+                  value: _selectedState,
+                ),
+              ),
+
+              SizedBox(height: 10.0),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                height: 50.0,
+                width: 190.0,
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  items: _districts.map((String dropDownStringItem) {
+                    return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(dropDownStringItem),
+                    );
+                  }).toList(),
+                  onChanged: (value) => _onSelectedDistrict(value),
+                  value: _selectedDistrict,
+                ),
+              ),
 
               Container(
                 width: 300.0,
@@ -238,6 +287,10 @@ class _SignupViewState extends State<VoterSignUpView> {
                       print('Date of Birth: $_dateOfBirth');
                       print('Gender: $_gender');
                       print('VoterID: $_voterId');
+
+                      print('State : $_selectedState');
+                      print('District: $_selectedDistrict');
+
                       print('Email: $_email');
                       print('Password: $_password');
 
@@ -284,5 +337,19 @@ class _SignupViewState extends State<VoterSignUpView> {
                 ),
               ))),
     );
+  }
+
+  void _onSelectedState(String value) {
+    setState(() {
+      _selectedDistrict = "Choose a district";
+      _districts = ["Choose a district"];
+      _selectedState = value;
+      _districts = List.from(_districts)
+        ..addAll(Location.getLocalByState(value));
+    });
+  }
+
+  void _onSelectedDistrict(String value) {
+    setState(() => _selectedDistrict = value);
   }
 }
