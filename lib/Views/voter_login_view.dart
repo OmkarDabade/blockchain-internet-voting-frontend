@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:ivote/App/voter_data.dart';
-import 'package:ivote/Views/proof_of_vote_view.dart';
-import 'add_admin_view.dart';
 
 class VoterLoginView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
