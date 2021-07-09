@@ -1,6 +1,6 @@
 class Candidate {
-  String candidateName, candidateId;
-  int ward;
+  String candidateName;
+  int ward, candidateId;
   String state, district;
 
   Candidate(

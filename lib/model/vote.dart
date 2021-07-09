@@ -1,7 +1,7 @@
 class Vote {
-  String candidateName, voterIdHash, candidateId;
-  int index, nonce;
-  DateTime timeStamp;
+  String candidateName, voterIdHash;
+  int index, nonce, candidateId;
+  String timeStamp;
   String previousHash, blockHash;
 
   Vote(

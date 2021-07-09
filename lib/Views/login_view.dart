@@ -137,8 +137,6 @@ class _LoginViewState extends State<LoginView> {
               child: TextButton(
                 onPressed: () {
                   if (widget.formKey.currentState.validate()) {
-                    widget.formKey.currentState.save();
-
                     print('Email: $_email');
                     print('Password: $_password');
 

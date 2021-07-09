@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:ivote/App/admin_data.dart';
+import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/location.dart';
 import 'package:ivote/App/routes.dart';
+import 'package:http/http.dart' as http;
 
 class AddCandidateView extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -228,7 +233,7 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                   const EdgeInsets.symmetric(horizontal: 100.0, vertical: 50.0),
               child: ElevatedButton.icon(
                 style: ButtonStyle(),
-                onPressed: () {
+                onPressed: () async {
                   if (widget.formKey.currentState.validate()) {
                     widget.formKey.currentState.save();
 
@@ -239,7 +244,26 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                     print('District: $_district');
                     print('Ward : $_ward');
 
-                    print('Deatils Saved successfully');
+                    String jsonBody = json.encode({
+                      'candidateName': _candidateName,
+                      'candidateId': _candidateId,
+                      'state': _state,
+                      'district': _district,
+                      'ward': _ward
+                    });
+
+                    http.Response response = await http.post(
+                        Uri(
+                          host: hostUrl,
+                          port: hostUrlPort,
+                          path: apiAddCandidate,
+                          // scheme: 'http',
+                        ),
+                        headers: postHeadersWithJWT(kAdminJWTToken),
+                        body: jsonBody);
+
+                    print('RESPONSE: ');
+                    print(response.body);
                   } else
                     print('Validation Failed');
                 },

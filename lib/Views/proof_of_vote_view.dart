@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
+import 'package:http/http.dart' as http;
+import 'package:ivote/model/vote.dart';
 
 class ProofOfVoteView extends StatefulWidget {
   @override
@@ -7,63 +11,79 @@ class ProofOfVoteView extends StatefulWidget {
 }
 
 class _ProofOfVoteState extends State<ProofOfVoteView> {
+  List<Vote> chain = [];
+  Map<String, dynamic> chainInJson;
+  bool isLoaded;
+
+  @override
+  void initState() {
+    isLoaded = false;
+    getChain();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: Key(Routes.proofOfVoteView),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            height: 70.0,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      body: isLoaded
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width * 3 / 5,
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText:
-                            'Enter your private key to check your vote submission'),
+                  height: 70.0,
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 3 / 5,
+                        child: TextField(
+                          decoration: InputDecoration(
+                              hintText:
+                                  'Enter your private key to check your vote submission'),
+                        ),
+                      ),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.lightBlue,
+                          onPrimary: Colors.white,
+                          shadowColor: Colors.black,
+                          elevation: 10,
+                        ),
+                        onPressed: () {},
+                        icon: Icon(Icons.search_sharp),
+                        label: Text('Search', style: TextStyle(fontSize: 18.0)),
+                      )
+                    ],
                   ),
                 ),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.lightBlue,
-                    onPrimary: Colors.white,
-                    shadowColor: Colors.black,
-                    elevation: 10,
+                _proofOfVoteBlock(
+                    blockNo: 'Block#',
+                    voterHash: 'Voter',
+                    blockHash: 'Tx Block Hash',
+                    votedTo: 'Vote to',
+                    timestamp: 'Time'),
+                const SizedBox(height: 10.0),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: chain.length,
+                    itemBuilder: (context, index) => _proofOfVoteBlock(
+                      blockNo: chain[index].index.toString(),
+                      blockHash: chain[index].blockHash,
+                      voterHash: chain[index].voterIdHash,
+                      votedTo: chain[index].candidateName,
+                      timestamp: chain[index].timeStamp,
+                    ),
                   ),
-                  onPressed: () {},
-                  icon: Icon(Icons.search_sharp),
-                  label: Text('Search', style: TextStyle(fontSize: 18.0)),
-                )
+                ),
               ],
+            )
+          : Center(
+              child: CircularProgressIndicator(),
             ),
-          ),
-          _proofOfVoteBlock(
-              blockNo: 'Block#',
-              voterHash: 'Voter',
-              blockHash: 'Tx Block Hash',
-              votedTo: 'Vote to',
-              timestamp: 'Time'),
-          const SizedBox(height: 10.0),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 17,
-              itemBuilder: (context, index) => _proofOfVoteBlock(
-                blockNo: '${index + 1}',
-                blockHash: 'ashfgasyhfkgvyhfvkwebvfhqlsgfyugyit36r23t7r83t27',
-                voterHash: 'ahsvckahgsvcqywlgf7328otr732gfyvc32o78',
-                votedTo: 'Me',
-                timestamp: '10:09 AM',
-              ),
-            ),
-          ),
-        ],
-      ),
       bottomNavigationBar: BottomAppBar(
           child: Container(
               height: 40,
@@ -101,22 +121,47 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
               child: Container(child: Text(blockNo)),
             ),
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Container(child: Text(voterHash)),
             ),
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(child: Text(votedTo)),
             ),
             Expanded(
-              flex: 1,
+              flex: 3,
               child: Container(child: Text(timestamp)),
             ),
             Expanded(
-              flex: 3,
+              flex: 7,
               child: Container(child: Text(blockHash)),
             ),
           ],
         ),
       );
+
+  void getChain() async {
+    chain = [];
+
+    http.Response response = await http.get(
+      Uri(
+        host: hostUrl,
+        port: hostUrlPort,
+        path: apiChain,
+        // scheme: 'http',
+      ),
+    );
+
+    print('RESPONSE: ');
+    chainInJson = jsonDecode(response.body);
+
+    for (Map<String, dynamic> vote in chainInJson['chain']) {
+      chain.add(Vote.fromJson(vote));
+    }
+
+    print('Successfully loaded chain data');
+    setState(() {
+      isLoaded = true;
+    });
+  }
 }

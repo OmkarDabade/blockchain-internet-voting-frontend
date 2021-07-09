@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:ivote/App/admin_data.dart';
+import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'add_admin_view.dart';
@@ -141,18 +145,43 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.formKey.currentState.validate()) {
                       widget.formKey.currentState.save();
 
                       print('LoginId: $_loginId');
                       print('Password: $_password');
 
-                      print('Deatils Saved successfully');
+                      String jsonBody = json
+                          .encode({'loginId': _loginId, 'password': _password});
+
+                      http.Response response = await http.post(
+                          Uri(
+                            host: hostUrl,
+                            port: hostUrlPort,
+                            path: apiLogin,
+                            // scheme: 'http',
+                          ),
+                          headers: postHeaders,
+                          body: jsonBody);
+
+                      print('RESPONSE: ');
+                      print(response.body);
+
+                      Map<String, dynamic> decodedJsonData =
+                          jsonDecode(response.body);
+
+                      if (decodedJsonData['result']) {
+                        // ShowDialog
+                        print('Admin Login Successful');
+
+                        extractAdminData(decodedJsonData);
+                        Navigator.pushNamed(context, Routes.addCandidateView);
+                      } else {
+                        print('Failed to login admin');
+                      }
                     } else
                       print('Validation Failed');
-
-                    Navigator.pushNamed(context, Routes.addCandidateView);
                   },
                   // Navigator.push(
                   //     context, MaterialPageRoute(builder: (_) => HomeView()));
