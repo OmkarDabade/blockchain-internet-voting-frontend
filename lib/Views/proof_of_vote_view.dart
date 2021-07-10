@@ -29,17 +29,18 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
       appBar: AppBar(
         toolbarHeight: 46,
         shadowColor: Colors.blueAccent,
+        leading: Offstage(),
         title: Text("Welcome"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.power_settings_new),
-            tooltip: 'Logout',
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.voterLoginView);
-            },
-          ),
-          Text('\n Logout   '),
-        ],
+        //   actions: <Widget>[
+        //     IconButton(
+        //       icon: Icon(Icons.power_settings_new),
+        //       tooltip: 'Logout',
+        //       onPressed: () {
+        //         Navigator.pushNamed(context, Routes.voterLoginView);
+        //       },
+        //     ),
+        //     Text('\n Logout   '),
+        //   ],
       ),
       key: Key(Routes.proofOfVoteView),
       body: isLoaded

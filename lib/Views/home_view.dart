@@ -6,6 +6,7 @@ import 'package:ivote/App/voter_data.dart';
 import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:ivote/model/candidate.dart';
+import 'package:ivote/model/vote.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -31,16 +32,27 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         toolbarHeight: 46,
         shadowColor: Colors.blueAccent,
-        title: Text("Welcome"),
+        title: Text("Cast Vote"),
+        leading: Offstage(),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.power_settings_new),
-            tooltip: 'Logout',
+          TextButton.icon(
+            label: Text(
+              'Logout',
+              style: TextStyle(color: Colors.white),
+            ),
+            icon: Icon(
+              Icons.power_settings_new,
+              color: Colors.white,
+            ),
+            // tooltip: 'Logout',
             onPressed: () {
-              Navigator.pushNamed(context, Routes.voterLoginView);
+              // await Navigator.pushNamed(context, Routes.voterLoginView);
+              Navigator.popUntil(
+                  context, ModalRoute.withName(Routes.voterLoginView));
             },
           ),
-          Text('\n Logout   '),
+          // Text('\n Logout   '),
+          const Padding(padding: const EdgeInsets.only(right: 30.0))
         ],
       ),
       drawer: Drawer(
@@ -196,6 +208,50 @@ class _HomeViewState extends State<HomeView> {
 
                         print('RESPONSE: ');
                         print(response.body);
+
+                        Map<String, dynamic> decodedJsonData =
+                            jsonDecode(response.body);
+
+                        if (decodedJsonData['result']) {
+                          // ShowDialog
+                          print('Vote Casted Successfully');
+                          Vote vote = Vote.fromJson(decodedJsonData['data']);
+
+                          await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text('Success'),
+                                    content: Text('Vote Casted Successfully\n' +
+                                        vote.stringToShowVoter()),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text('OK'))
+                                    ],
+                                  ));
+
+                          Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.proofOfVoteView,
+                              ModalRoute.withName(Routes.voterLoginView));
+                        } else {
+                          print('Failed to cast vote');
+
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text('Failed'),
+                                    content: Text('Failed to cast vote\n' +
+                                        decodedJsonData['message']),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text('RETRY'))
+                                    ],
+                                  ));
+                        }
                       },
                       icon: Icon(Icons.thumb_up_outlined),
                       label: Text('Vote', style: TextStyle(fontSize: 19.0)),

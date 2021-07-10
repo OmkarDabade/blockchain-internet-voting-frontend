@@ -174,11 +174,38 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                       if (decodedJsonData['result']) {
                         // ShowDialog
                         print('Admin Login Successful');
-
                         extractAdminData(decodedJsonData);
+
+                        await showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text('Success'),
+                                  content: Text('Login Successful'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text('OK'))
+                                  ],
+                                ));
+
                         Navigator.pushNamed(context, Routes.addCandidateView);
                       } else {
                         print('Failed to login admin');
+
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text('Failed'),
+                                  content: Text('Login Failed\n' +
+                                      decodedJsonData['message']),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text('OK'))
+                                  ],
+                                ));
                       }
                     } else
                       print('Validation Failed');

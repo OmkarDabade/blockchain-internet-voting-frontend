@@ -12,7 +12,9 @@ class IVote extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'I-Vote',
-      initialRoute: Routes.proofOfVoteView,
+      // Dont change this
+      // this is root of project
+      initialRoute: Routes.voterLoginView,
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,
     );

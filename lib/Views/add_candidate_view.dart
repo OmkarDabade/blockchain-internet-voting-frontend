@@ -44,16 +44,27 @@ class _AddCandidateViewState extends State<AddCandidateView> {
       appBar: AppBar(
         toolbarHeight: 46,
         shadowColor: Colors.blueAccent,
-        title: Text("Welcome"),
+        title: Text("Add Candidate"),
+        leading: Offstage(),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.power_settings_new),
-            tooltip: 'Logout',
+          TextButton.icon(
+            label: Text(
+              'Logout',
+              style: TextStyle(color: Colors.white),
+            ),
+            icon: Icon(
+              Icons.power_settings_new,
+              color: Colors.white,
+            ),
+            // tooltip: 'Logout',
             onPressed: () {
-              Navigator.pushNamed(context, Routes.voterLoginView);
+              // await Navigator.pushNamed(context, Routes.voterLoginView);
+              Navigator.popUntil(
+                  context, ModalRoute.withName(Routes.voterLoginView));
             },
           ),
-          Text('\n Logout   '),
+          // Text('\n Logout   '),
+          const Padding(padding: const EdgeInsets.only(right: 30.0))
         ],
       ),
       key: Key(Routes.addCandidateView),

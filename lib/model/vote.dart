@@ -26,4 +26,15 @@ class Vote {
       previousHash: jsonData['previousHash'],
     );
   }
+
+  @override
+  String toString() {
+    super.toString();
+
+    return "Block#: ${this.index}\nCandidate Id: ${this.candidateId}\nCandidate Name: ${this.candidateName}\nVoter: ${this.voterIdHash}\nTime: ${this.timeStamp}\nNonce: ${this.nonce}\nBlock Hash: ${this.blockHash}\nPrevious Hash: ${this.previousHash}";
+  }
+
+  String stringToShowVoter() {
+    return "Block#: ${this.index}\nCandidate Id: ${this.candidateId}\nCandidate Name: ${this.candidateName}\nVoter: ${this.voterIdHash}\nTime: ${this.timeStamp}\nBlock Hash: ${this.blockHash}";
+  }
 }
