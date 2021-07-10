@@ -34,12 +34,13 @@ class _HomeViewState extends State<HomeView> {
         title: Text("Welcome"),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.logout_outlined),
+            icon: Icon(Icons.power_settings_new),
             tooltip: 'Logout',
             onPressed: () {
               Navigator.pushNamed(context, Routes.voterLoginView);
             },
           ),
+          Text('\n Logout   '),
         ],
       ),
       drawer: Drawer(
