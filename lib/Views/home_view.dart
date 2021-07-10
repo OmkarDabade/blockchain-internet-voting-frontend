@@ -29,7 +29,18 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome'),
+        toolbarHeight: 46,
+        shadowColor: Colors.blueAccent,
+        title: Text("Welcome"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.logout_outlined),
+            tooltip: 'Logout',
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.voterLoginView);
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
