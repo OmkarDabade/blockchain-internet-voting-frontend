@@ -212,6 +212,7 @@ class _SignupViewState extends State<VoterSignUpView> {
                     ),
                     isExpanded: true,
                     isDense: true,
+                    icon: Icon(Icons.keyboard_arrow_down),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (district) {
                       if (district == "Choose a district")
@@ -251,6 +252,7 @@ class _SignupViewState extends State<VoterSignUpView> {
                     ),
                     isExpanded: true,
                     isDense: true,
+                    icon: Icon(Icons.keyboard_arrow_down),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (ward) {
                       if (ward == "Choose a ward") return 'Please Select ward';
