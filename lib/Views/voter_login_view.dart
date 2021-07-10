@@ -128,7 +128,7 @@ class _LoginViewState extends State<VoterLoginView> {
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
-                      hintText: 'Enter secure password'),
+                      hintText: 'Enter your password'),
                 ),
               ),
               TextButton(
