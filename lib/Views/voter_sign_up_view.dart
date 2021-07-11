@@ -416,7 +416,7 @@ class _SignupViewState extends State<VoterSignUpView> {
                       print('RESPONSE: ');
                       print(response.body);
 
-                      // Navigator.pushNamed(context, Routes.homeView);
+                      Navigator.pushNamed(context, Routes.voterLoginView);
                     } else
                       print('Validation Failed');
                   },
