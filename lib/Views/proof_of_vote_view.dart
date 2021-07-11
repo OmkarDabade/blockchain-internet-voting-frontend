@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
@@ -17,7 +18,7 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
   Map<String, dynamic> chainInJson;
   bool isLoaded, searchResults;
   final List<String> queries = ['blockNo', 'blockHash', 'voterIdHash'];
-  String selectedQuery = 'blockNo';
+  String selectedQuery = 'blockNo', messageToDisplay;
   dynamic searchValue;
 
   TextEditingController textEditingController = TextEditingController();
@@ -159,29 +160,34 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
                   ),
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: DataTable(
-                      columnSpacing: 35.0,
-                      columns: [
-                        DataColumn(label: Text('Block No'), numeric: true),
-                        DataColumn(label: Text('Voter')),
-                        DataColumn(label: Text('Block Tx Hash')),
-                        DataColumn(label: Text('Candidate Name')),
-                        DataColumn(label: Text('Time')),
-                      ],
-                      rows: [
-                        for (Vote vote in chain)
-                          DataRow(cells: [
-                            DataCell(Text(vote.index.toString())),
-                            DataCell(Text(vote.voterIdHash)),
-                            DataCell(Text(vote.blockHash)),
-                            DataCell(Text(vote.candidateName)),
-                            DataCell(Text(vote.timeStamp)),
-                          ])
-                      ],
-                    ),
-                  ),
+                  child: chain.isNotEmpty
+                      ? SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: DataTable(
+                            columnSpacing: 35.0,
+                            columns: [
+                              DataColumn(
+                                  label: Text('Block No'), numeric: true),
+                              DataColumn(label: Text('Voter')),
+                              DataColumn(label: Text('Block Tx Hash')),
+                              DataColumn(label: Text('Candidate Name')),
+                              DataColumn(label: Text('Time')),
+                            ],
+                            rows: [
+                              for (Vote vote in chain)
+                                DataRow(cells: [
+                                  DataCell(Text(vote.index.toString())),
+                                  DataCell(Text(vote.voterIdHash)),
+                                  DataCell(Text(vote.blockHash)),
+                                  DataCell(Text(vote.candidateName)),
+                                  DataCell(Text(vote.timeStamp)),
+                                ])
+                            ],
+                          ),
+                        )
+                      : Center(
+                          child: Text(messageToDisplay),
+                        ),
                 ),
               ],
             )
@@ -206,24 +212,32 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
       isLoaded = false;
     });
     chain = [];
+    try {
+      http.Response response = await http.get(
+        Uri(
+          host: hostUrl,
+          port: hostUrlPort,
+          path: apiChain,
+          // scheme: 'http',
+        ),
+      );
 
-    http.Response response = await http.get(
-      Uri(
-        host: hostUrl,
-        port: hostUrlPort,
-        path: apiChain,
-        // scheme: 'http',
-      ),
-    );
+      print('RESPONSE: ');
+      chainInJson = jsonDecode(response.body);
 
-    print('RESPONSE: ');
-    chainInJson = jsonDecode(response.body);
+      if (chainInJson.isNotEmpty && chainInJson['result']) {
+        for (Map<String, dynamic> vote in chainInJson['chain']) {
+          chain.add(Vote.fromJson(vote));
 
-    for (Map<String, dynamic> vote in chainInJson['chain']) {
-      chain.add(Vote.fromJson(vote));
+          print('Successfully loaded chain data');
+        }
+      }
+    } catch (error) {
+      messageToDisplay =
+          'Connection Error, Please check your internet connection';
+      print('failed to load chain data, possibly network error');
     }
 
-    print('Successfully loaded chain data');
     setState(() {
       isLoaded = true;
     });
@@ -235,23 +249,65 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
     });
     chain = [];
 
-    http.Response response = await http.post(
-      Uri(
-        host: hostUrl,
-        port: hostUrlPort,
-        path: apiSearch,
-        // scheme: 'http',
-      ),
-      headers: postHeaders,
-      body: json.encode({selectedQuery: searchValue}),
-    );
+    try {
+      http.Response response = await http.post(
+        Uri(
+          host: hostUrl,
+          port: hostUrlPort,
+          path: apiSearch,
+          // scheme: 'http',
+        ),
+        headers: postHeaders,
+        body: json.encode({selectedQuery: searchValue}),
+      );
 
-    print('RESPONSE OF SEARCH: ');
-    chainInJson = jsonDecode(response.body);
+      // if (response.statusCode == 200) {
+      print('RESPONSE OF SEARCH: ');
+      chainInJson = jsonDecode(response.body);
 
-    chain.add(Vote.fromJson(chainInJson));
+      if (chainInJson.isNotEmpty && chainInJson['result']) {
+        chain.add(Vote.fromJson(chainInJson));
 
-    print('Successfully loaded chain data for search');
+        print('Successfully loaded chain data for search');
+      } else if (chainInJson.isNotEmpty) {
+        messageToDisplay = chainInJson['message'];
+      } else {
+        messageToDisplay = 'Some error occured';
+      }
+    } on SocketException {
+      messageToDisplay =
+          'Error, Please check your internet connection and try again';
+      print('failed to load chain data, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to load chain data');
+      messageToDisplay = 'Error, Please try again';
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
+
     setState(() {
       isLoaded = true;
     });

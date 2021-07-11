@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
@@ -148,24 +149,7 @@ class _AddAdminViewState extends State<AddAdminView> {
                       print('LoginId: $_adminLoginId');
                       print('Password: $_adminPassword');
 
-                      String jsonBody = json.encode({
-                        'loginId': _adminLoginId,
-                        'name': _adminName,
-                        'password': _adminPassword
-                      });
-
-                      http.Response response = await http.post(
-                          Uri(
-                            host: hostUrl,
-                            port: hostUrlPort,
-                            path: apiSignup,
-                            // scheme: 'http',
-                          ),
-                          headers: postHeaders,
-                          body: jsonBody);
-
-                      print('RESPONSE: ');
-                      print(response.body);
+                      await requestServer();
                     } else
                       print('Validation Failed');
                   },
@@ -195,5 +179,97 @@ class _AddAdminViewState extends State<AddAdminView> {
                 ),
               ))),
     );
+  }
+
+  Future<void> requestServer() async {
+    try {
+      String jsonBody = json.encode({
+        'loginId': _adminLoginId,
+        'name': _adminName,
+        'password': _adminPassword
+      });
+
+      http.Response response = await http.post(
+        Uri(
+          host: hostUrl,
+          port: hostUrlPort,
+          path: apiSignup,
+          // scheme: 'http',
+        ),
+        headers: postHeaders,
+        body: jsonBody,
+      );
+
+      print('ADD ADMIN RESPONSE: ');
+      print(response.body);
+
+      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      if (decodedJsonData['result']) {
+        // ShowDialog
+        print('Admin added Successfully');
+
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Success'),
+            content: Text('Admin Registration Successful'),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'))
+            ],
+          ),
+        );
+
+        widget.formKey.currentState.reset();
+        Navigator.pushNamed(context, Routes.adminLoginView);
+      } else {
+        print('Failed to add admin');
+
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Failed'),
+                  content: Text(
+                      'Registration Failed\n' + decodedJsonData['message'] ??
+                          ''),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('OK'))
+                  ],
+                ));
+      }
+    } on SocketException {
+      print('failed to add admin, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to add admin');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
   }
 }

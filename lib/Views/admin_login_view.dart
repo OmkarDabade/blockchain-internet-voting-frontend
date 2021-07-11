@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ivote/App/admin_data.dart';
@@ -152,61 +153,7 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                       print('LoginId: $_loginId');
                       print('Password: $_password');
 
-                      String jsonBody = json
-                          .encode({'loginId': _loginId, 'password': _password});
-
-                      http.Response response = await http.post(
-                          Uri(
-                            host: hostUrl,
-                            port: hostUrlPort,
-                            path: apiLogin,
-                            // scheme: 'http',
-                          ),
-                          headers: postHeaders,
-                          body: jsonBody);
-
-                      print('RESPONSE: ');
-                      print(response.body);
-
-                      Map<String, dynamic> decodedJsonData =
-                          jsonDecode(response.body);
-
-                      if (decodedJsonData['result']) {
-                        // ShowDialog
-                        print('Admin Login Successful');
-                        extractAdminData(decodedJsonData);
-
-                        await showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: Text('Success'),
-                                  content: Text('Login Successful'),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: Text('OK'))
-                                  ],
-                                ));
-
-                        Navigator.pushNamed(context, Routes.addCandidateView);
-                      } else {
-                        print('Failed to login admin');
-
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: Text('Failed'),
-                                  content: Text('Login Failed\n' +
-                                      decodedJsonData['message']),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: Text('OK'))
-                                  ],
-                                ));
-                      }
+                      await requestServer();
                     } else
                       print('Validation Failed');
                   },
@@ -250,5 +197,94 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                 ),
               ))),
     );
+  }
+
+  Future<void> requestServer() async {
+    try {
+      String jsonBody =
+          json.encode({'loginId': _loginId, 'password': _password});
+
+      http.Response response = await http.post(
+        Uri(
+          host: hostUrl,
+          port: hostUrlPort,
+          path: apiLogin,
+          // scheme: 'http',
+        ),
+        headers: postHeaders,
+        body: jsonBody,
+      );
+
+      print('RESPONSE: ');
+      print(response.body);
+
+      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      if (decodedJsonData['result']) {
+        // ShowDialog
+        print('Admin Login Successful');
+        extractAdminData(decodedJsonData);
+
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Success'),
+            content: Text('Login Successful'),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'))
+            ],
+          ),
+        );
+
+        widget.formKey.currentState.reset();
+        Navigator.pushNamed(context, Routes.addCandidateView);
+      } else {
+        print('Failed to login admin');
+
+       await  showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Failed'),
+                  content:
+                      Text('Login Failed\n' + decodedJsonData['message'] ?? ''),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('OK'))
+                  ],
+                ));
+      }
+    } on SocketException {
+      print('failed to load chain data, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to load chain data');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
   }
 }

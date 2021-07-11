@@ -12,6 +12,7 @@ const String apiAddCandidate = 'addCandidate';
 const String apiCastVote = 'castVote';
 const String apiChain = 'chain';
 const String apiConsensus = 'consensus';
+const String apiForgotPassword = 'forgotPassword';
 const String apiGetCandidates = 'getCandidates';
 const String apiGetDataStats = 'getDataStats';
 const String apiLogin = 'login';
