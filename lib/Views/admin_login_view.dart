@@ -172,7 +172,7 @@ class _AdminLoginViewState extends State<AdminLoginView> {
               Container(
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.voterSignUpView);
+                      Navigator.pushNamed(context, Routes.addAdminView);
                     },
                     child: Text(
                       'New User? Create Account',
@@ -243,7 +243,7 @@ class _AdminLoginViewState extends State<AdminLoginView> {
       } else {
         print('Failed to login admin');
 
-       await  showDialog(
+        await showDialog(
             context: context,
             builder: (context) => AlertDialog(
                   title: Text('Failed'),
