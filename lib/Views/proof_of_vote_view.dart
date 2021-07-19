@@ -211,26 +211,29 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
     setState(() {
       isLoaded = false;
     });
+
     chain = [];
+    chainInJson = {};
+
     try {
       http.Response response = await http.get(
-        Uri(
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiChain,
-          // scheme: 'http',
-        ),
+        Uri.parse(baseAPIUrl + apiChain),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiChain,
+        //   // scheme: 'http',
+        // ),
       );
 
-      print('RESPONSE: ');
+      print('RESPONSE: ${response.body}');
       chainInJson = jsonDecode(response.body);
 
       if (chainInJson.isNotEmpty && chainInJson['result']) {
         for (Map<String, dynamic> vote in chainInJson['chain']) {
           chain.add(Vote.fromJson(vote));
-
-          print('Successfully loaded chain data');
         }
+        print('Successfully loaded chain data');
       }
     } catch (error) {
       messageToDisplay =
@@ -248,25 +251,27 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
       isLoaded = false;
     });
     chain = [];
+    chainInJson = {};
 
     try {
       http.Response response = await http.post(
-        Uri(
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiSearch,
-          // scheme: 'http',
-        ),
+        Uri.parse(baseAPIUrl + apiSearch),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiSearch,
+        //   // scheme: 'http',
+        // ),
         headers: postHeaders,
         body: json.encode({selectedQuery: searchValue}),
       );
 
       // if (response.statusCode == 200) {
-      print('RESPONSE OF SEARCH: ');
+      print('RESPONSE OF SEARCH: ${response.body}');
       chainInJson = jsonDecode(response.body);
 
       if (chainInJson.isNotEmpty && chainInJson['result']) {
-        chain.add(Vote.fromJson(chainInJson));
+        chain.add(Vote.fromJson(chainInJson['vote']));
 
         print('Successfully loaded chain data for search');
       } else if (chainInJson.isNotEmpty) {
