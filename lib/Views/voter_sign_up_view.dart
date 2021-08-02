@@ -467,12 +467,13 @@ class _SignupViewState extends State<VoterSignUpView> {
       });
 
       http.Response response = await http.post(
-        Uri(
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiSignup,
-          // scheme: 'http',
-        ),
+        Uri.parse(baseAPIUrl + apiSignup),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiSignup,
+        //   // scheme: 'http',
+        // ),
         headers: postHeaders,
         body: jsonBody,
       );

@@ -205,12 +205,13 @@ class _AdminLoginViewState extends State<AdminLoginView> {
           json.encode({'loginId': _loginId, 'password': _password});
 
       http.Response response = await http.post(
-        Uri(
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiLogin,
-          // scheme: 'http',
-        ),
+        Uri.parse(baseAPIUrl + apiLogin),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiLogin,
+        //   // scheme: 'http',
+        // ),
         headers: postHeaders,
         body: jsonBody,
       );

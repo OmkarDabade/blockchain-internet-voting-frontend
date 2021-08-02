@@ -365,12 +365,13 @@ class _ForgotPasswordViewState extends State<VoterForgotPasswordView> {
       });
 
       http.Response response = await http.post(
-        Uri(
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiForgotPassword,
-          // scheme: 'http',
-        ),
+        Uri.parse(baseAPIUrl + apiForgotPassword),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiForgotPassword,
+        //   // scheme: 'http',
+        // ),
         headers: postHeaders,
         body: jsonBody,
       );

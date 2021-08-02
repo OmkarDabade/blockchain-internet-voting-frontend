@@ -220,16 +220,17 @@ class _HomeViewState extends State<HomeView> {
 
     print('requesting server');
 
-    http.Response response = await http.post(
-        Uri(
-          // queryParameters: jsonData,
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiGetCandidates,
-          // scheme: 'http',
-        ),
-        headers: postHeadersWithJWT(kVoterJWTToken),
-        body: json.encode(jsonData));
+    http.Response response =
+        await http.post(Uri.parse(baseAPIUrl + apiGetCandidates),
+            // Uri(
+            //   // queryParameters: jsonData,
+            //   host: hostUrl,
+            //   port: hostUrlPort,
+            //   path: apiGetCandidates,
+            //   // scheme: 'http',
+            // ),
+            headers: postHeadersWithJWT(kVoterJWTToken),
+            body: json.encode(jsonData));
 
     print('GET CANDIDATES RESPONSE: ');
     print(response.body);
@@ -262,12 +263,13 @@ class _HomeViewState extends State<HomeView> {
       });
 
       http.Response response = await http.post(
-        Uri(
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiCastVote,
-          // scheme: 'http',
-        ),
+        Uri.parse(baseAPIUrl + apiCastVote),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiCastVote,
+        //   // scheme: 'http',
+        // ),
         headers: postHeadersWithJWT(kVoterJWTToken),
         body: jsonBody,
       );

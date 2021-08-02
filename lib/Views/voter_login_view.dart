@@ -208,13 +208,13 @@ class _LoginViewState extends State<VoterLoginView> {
       String jsonBody =
           json.encode({'voterId': _voterId, 'password': _password});
 
-      http.Response response = await http.post(
-          Uri(
-            host: hostUrl,
-            port: hostUrlPort,
-            path: apiLogin,
-            // scheme: 'http',
-          ),
+      http.Response response = await http.post(Uri.parse(baseAPIUrl + apiLogin),
+          // Uri(
+          //   host: hostUrl,
+          //   port: hostUrlPort,
+          //   path: apiLogin,
+          //   // scheme: 'http',
+          // ),
           headers: postHeaders,
           body: jsonBody);
 

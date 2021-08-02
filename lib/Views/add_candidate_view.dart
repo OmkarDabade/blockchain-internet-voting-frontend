@@ -360,12 +360,13 @@ class _AddCandidateViewState extends State<AddCandidateView> {
       });
 
       http.Response response = await http.post(
-        Uri(
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiAddCandidate,
-          // scheme: 'http',
-        ),
+        Uri.parse(baseAPIUrl + apiAddCandidate),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiAddCandidate,
+        //   // scheme: 'http',
+        // ),
         headers: postHeadersWithJWT(kAdminJWTToken),
         body: jsonBody,
       );
