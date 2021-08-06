@@ -41,7 +41,12 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
       appBar: AppBar(
         toolbarHeight: 46,
         shadowColor: Colors.blueAccent,
-        leading: Offstage(),
+        leading: BackButton(
+          onPressed: () {
+            Navigator.popUntil(
+                context, ModalRoute.withName(Routes.voterLoginView));
+          },
+        ),
         title: TextButton(
           child: Text("Proof of Vote",
               style: TextStyle(

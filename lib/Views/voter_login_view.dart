@@ -45,13 +45,13 @@ class _LoginViewState extends State<VoterLoginView> {
                 Navigator.pushNamed(context, Routes.proofOfVoteView);
               },
             ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Add admin'),
-              onTap: () {
-                Navigator.pushNamed(context, Routes.addAdminView);
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.account_circle),
+            //   title: Text('Add admin'),
+            //   onTap: () {
+            //     Navigator.pushNamed(context, Routes.addAdminView);
+            //   },
+            // ),
             ListTile(
               leading: Icon(Icons.account_circle),
               title: Text('Admin Login'),
