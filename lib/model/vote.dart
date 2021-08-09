@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 class Vote {
   String candidateName, voterIdHash;
   int index, nonce, candidateId;

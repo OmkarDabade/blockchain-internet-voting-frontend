@@ -8,6 +8,7 @@ import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:ivote/model/candidate.dart';
 import 'package:ivote/model/vote.dart';
+import 'package:flutter/services.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -285,12 +286,29 @@ class _HomeViewState extends State<HomeView> {
         print('Vote Casted Successfully');
         Vote vote = Vote.fromJson(decodedJsonData['data']);
 
+        await Clipboard.setData(ClipboardData(text: vote.voterIdHash)).then(
+          (value) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Voter Hash copied to clipboard!')),
+          ),
+        );
+
         await showDialog(
             context: context,
             builder: (context) => AlertDialog(
                   title: Text('Success'),
-                  content: Text(
-                      'Vote Casted Successfully\n' + vote.stringToShowVoter()),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Vote Casted Successfully'),
+                      SelectableText('Block#: ${vote.index}'),
+                      SelectableText('Candidate Id: ${vote.candidateId}'),
+                      SelectableText('Candidate Name: ${vote.candidateName}'),
+                      SelectableText('Voter: ${vote.voterIdHash}'),
+                      SelectableText('Time: ${vote.timeStamp}'),
+                      SelectableText('Block Hash: ${vote.blockHash}'),
+                    ],
+                  ),
                   actions: [
                     TextButton(
                         onPressed: () => Navigator.of(context).pop(),
