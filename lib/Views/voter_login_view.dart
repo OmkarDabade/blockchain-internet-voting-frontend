@@ -23,18 +23,20 @@ class _LoginViewState extends State<VoterLoginView> {
         title: const Text('Welcome'),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
+          // padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text(
-                'I-Voting',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+              child: Center(
+                child: Text(
+                  'I-Voting',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
                 ),
               ),
             ),
@@ -66,6 +68,12 @@ class _LoginViewState extends State<VoterLoginView> {
                 Navigator.pushNamed(context, Routes.voterSignUpView);
               },
             ),
+            Spacer(),
+            Container(
+              height: 50.0,
+              width: double.infinity,
+              child: Center(child: Text('Version: $version')),
+            )
           ],
         ),
       ),

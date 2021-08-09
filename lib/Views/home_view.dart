@@ -219,6 +219,7 @@ class _HomeViewState extends State<HomeView> {
     if (kWard != null) jsonData['ward'] = kWard;
 
     print('requesting server');
+    print(jsonData);
 
     http.Response response =
         await http.post(Uri.parse(baseAPIUrl + apiGetCandidates),

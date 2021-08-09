@@ -3,6 +3,8 @@ import 'dart:io';
 // const String hostUrl = 'ivote-mickel.herokuapp.com';
 // const int hostUrlPort = 5123;
 
+const double version = 0.1;
+
 //'http://127.0.0.1:5132/'
 // const String baseAPIUrl = 'http://127.0.0.1:5000/';
 const String baseAPIUrl = 'https://ivote-mickel.herokuapp.com/';
