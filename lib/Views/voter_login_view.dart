@@ -213,23 +213,21 @@ class _LoginViewState extends State<VoterLoginView> {
 
   Future<void> requestServer() async {
     try {
-      String jsonBody =
-          json.encode({'voterId': _voterId, 'password': _password});
+      // String jsonBody =
+      //     json.encode({'voterId': _voterId, 'password': _password});
 
-      http.Response response = await http.post(Uri.parse(baseAPIUrl + apiLogin),
-          // Uri(
-          //   host: hostUrl,
-          //   port: hostUrlPort,
-          //   path: apiLogin,
-          //   // scheme: 'http',
-          // ),
-          headers: postHeaders,
-          body: jsonBody);
+      // http.Response response = await http.post(Uri.parse(baseAPIUrl + apiLogin),
+      //     headers: postHeaders, body: jsonBody);
 
-      print('RESPONSE: ');
-      print(response.body);
+      // print('RESPONSE: ');
+      // print(response.body);
 
-      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      // Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      Map<String, dynamic> decodedJsonData = {
+        'result': true,
+        'isVoteCasted': false,
+      };
 
       if (decodedJsonData['result']) {
         print('voter login response recieved with res=true');
@@ -252,13 +250,13 @@ class _LoginViewState extends State<VoterLoginView> {
           );
         } else {
           print('Voter Login Successful');
-          extractVoterData(decodedJsonData);
+          // extractVoterData(decodedJsonData);
 
           await showDialog(
               context: context,
               builder: (context) => AlertDialog(
                     title: Text('Success'),
-                    content: Text('Login Successful'),
+                    content: Text('Demo Login Successful'),
                     actions: [
                       TextButton(
                           onPressed: () => Navigator.of(context).pop(),

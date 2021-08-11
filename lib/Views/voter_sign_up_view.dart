@@ -456,32 +456,30 @@ class _SignupViewState extends State<VoterSignUpView> {
 
   Future<void> requestServer() async {
     try {
-      String jsonBody = json.encode({
-        'voterId': _voterId,
-        'name': _name,
-        'state': _state,
-        'district': _district,
-        'ward': _ward,
-        'mobile': _mobileNo,
-        'password': _password
-      });
+      // String jsonBody = json.encode({
+      //   'voterId': _voterId,
+      //   'name': _name,
+      //   'state': _state,
+      //   'district': _district,
+      //   'ward': _ward,
+      //   'mobile': _mobileNo,
+      //   'password': _password
+      // });
 
-      http.Response response = await http.post(
-        Uri.parse(baseAPIUrl + apiSignup),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiSignup,
-        //   // scheme: 'http',
-        // ),
-        headers: postHeaders,
-        body: jsonBody,
-      );
+      // http.Response response = await http.post(
+      //   Uri.parse(baseAPIUrl + apiSignup),
+      //   headers: postHeaders,
+      //   body: jsonBody,
+      // );
 
-      print('RESPONSE: ');
-      print(response.body);
+      // print('RESPONSE: ');
+      // print(response.body);
 
-      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      // Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      Map<String, dynamic> decodedJsonData = {
+        'result': true,
+      };
 
       if (decodedJsonData['result']) {
         // ShowDialog
@@ -490,8 +488,8 @@ class _SignupViewState extends State<VoterSignUpView> {
         await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Success'),
-            content: Text('Voter Registration Successful'),
+            title: Text('Demo Success'),
+            content: Text('Demo Voter Registration Successful'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -538,16 +536,17 @@ class _SignupViewState extends State<VoterSignUpView> {
       print('failed to add voter');
 
       await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text('Error Occured'),
-                content: Text(error.toString()),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('RETRY'))
-                ],
-              ));
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error Occured'),
+          content: Text(error.toString()),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('RETRY'))
+          ],
+        ),
+      );
     }
   }
 }

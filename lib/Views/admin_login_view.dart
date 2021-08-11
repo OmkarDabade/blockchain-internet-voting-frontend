@@ -201,36 +201,34 @@ class _AdminLoginViewState extends State<AdminLoginView> {
 
   Future<void> requestServer() async {
     try {
-      String jsonBody =
-          json.encode({'loginId': _loginId, 'password': _password});
+      // String jsonBody =
+      //     json.encode({'loginId': _loginId, 'password': _password});
 
-      http.Response response = await http.post(
-        Uri.parse(baseAPIUrl + apiLogin),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiLogin,
-        //   // scheme: 'http',
-        // ),
-        headers: postHeaders,
-        body: jsonBody,
-      );
+      // http.Response response = await http.post(
+      //   Uri.parse(baseAPIUrl + apiLogin),
+      //   headers: postHeaders,
+      //   body: jsonBody,
+      // );
 
-      print('RESPONSE: ');
-      print(response.body);
+      // print('RESPONSE: ');
+      // print(response.body);
 
-      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      // Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      Map<String, dynamic> decodedJsonData = {
+        'result': true,
+      };
 
       if (decodedJsonData['result']) {
         // ShowDialog
         print('Admin Login Successful');
-        extractAdminData(decodedJsonData);
+        // extractAdminData(decodedJsonData);
 
         await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Success'),
-            content: Text('Login Successful'),
+            title: Text('Demo Success'),
+            content: Text('Demo Login Successful'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),

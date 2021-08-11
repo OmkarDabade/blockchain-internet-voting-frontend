@@ -217,34 +217,29 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
       isLoaded = false;
     });
 
-    chain = [];
-    chainInJson = {};
+    // chain = [];
+    // chainInJson = {};
 
-    try {
-      http.Response response = await http.get(
-        Uri.parse(baseAPIUrl + apiChain),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiChain,
-        //   // scheme: 'http',
-        // ),
-      );
+    // try {
+    //   http.Response response = await http.get(
+    //     Uri.parse(baseAPIUrl + apiChain),
+    //   );
 
-      print('RESPONSE: ${response.body}');
-      chainInJson = jsonDecode(response.body);
+    //   print('RESPONSE: ${response.body}');
+    //   chainInJson = jsonDecode(response.body);
 
-      if (chainInJson.isNotEmpty && chainInJson['result']) {
-        for (Map<String, dynamic> vote in chainInJson['chain']) {
-          chain.add(Vote.fromJson(vote));
-        }
-        print('Successfully loaded chain data');
-      }
-    } catch (error) {
-      messageToDisplay =
-          'Connection Error, Please check your internet connection';
-      print('failed to load chain data, possibly network error');
-    }
+    //   if (chainInJson.isNotEmpty && chainInJson['result']) {
+    //     for (Map<String, dynamic> vote in chainInJson['chain']) {
+    //       chain.add(Vote.fromJson(vote));
+    //     }
+    //     print('Successfully loaded chain data');
+    //   }
+    // } catch (error) {
+    //   messageToDisplay =
+    //       'Connection Error, Please check your internet connection';
+    //   print('failed to load chain data, possibly network error');
+    // }
+    chain = demoVoteChain;
 
     setState(() {
       isLoaded = true;
@@ -256,67 +251,83 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
       isLoaded = false;
     });
     chain = [];
-    chainInJson = {};
-
-    try {
-      http.Response response = await http.post(
-        Uri.parse(baseAPIUrl + apiSearch),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiSearch,
-        //   // scheme: 'http',
-        // ),
-        headers: postHeaders,
-        body: json.encode({selectedQuery: searchValue}),
-      );
-
-      // if (response.statusCode == 200) {
-      print('RESPONSE OF SEARCH: ${response.body}');
-      chainInJson = jsonDecode(response.body);
-
-      if (chainInJson.isNotEmpty && chainInJson['result']) {
-        chain.add(Vote.fromJson(chainInJson['vote']));
-
-        print('Successfully loaded chain data for search');
-      } else if (chainInJson.isNotEmpty) {
-        messageToDisplay = chainInJson['message'];
-      } else {
-        messageToDisplay = 'Some error occured';
+    // chainInJson = {};
+    if (selectedQuery == 'blockNo') {
+      for (Vote vote in demoVoteChain) {
+        if (vote.index == searchValue) {
+          chain.add(vote);
+          break;
+        }
       }
-    } on SocketException {
-      messageToDisplay =
-          'Error, Please check your internet connection and try again';
-      print('failed to load chain data, network error');
-
-      await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text('Network Error'),
-                content: Text(
-                    "Connection Error, Please check your internet connection"),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('RETRY'))
-                ],
-              ));
-    } catch (error) {
-      print('failed to load chain data');
-      messageToDisplay = 'Error, Please try again';
-
-      await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text('Error Occured'),
-                content: Text(error.toString()),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('RETRY'))
-                ],
-              ));
+    } else if (selectedQuery == 'blockHash') {
+      for (Vote vote in demoVoteChain) {
+        if (vote.blockHash == searchValue) {
+          chain.add(vote);
+          break;
+        }
+      }
+    } else if (selectedQuery == 'voterIdHash') {
+      for (Vote vote in demoVoteChain) {
+        if (vote.voterIdHash == searchValue) {
+          chain.add(vote);
+          break;
+        }
+      }
     }
+
+    // try {
+    //   http.Response response = await http.post(
+    //     Uri.parse(baseAPIUrl + apiSearch),
+    //     headers: postHeaders,
+    //     body: json.encode({selectedQuery: searchValue}),
+    //   );
+
+    //   // if (response.statusCode == 200) {
+    //   print('RESPONSE OF SEARCH: ${response.body}');
+    //   chainInJson = jsonDecode(response.body);
+
+    //   if (chainInJson.isNotEmpty && chainInJson['result']) {
+    //     chain.add(Vote.fromJson(chainInJson['vote']));
+
+    //     print('Successfully loaded chain data for search');
+    //   } else if (chainInJson.isNotEmpty) {
+    //     messageToDisplay = chainInJson['message'];
+    //   } else {
+    //     messageToDisplay = 'Some error occured';
+    //   }
+    // } on SocketException {
+    //   messageToDisplay =
+    //       'Error, Please check your internet connection and try again';
+    //   print('failed to load chain data, network error');
+
+    //   await showDialog(
+    //       context: context,
+    //       builder: (context) => AlertDialog(
+    //             title: Text('Network Error'),
+    //             content: Text(
+    //                 "Connection Error, Please check your internet connection"),
+    //             actions: [
+    //               TextButton(
+    //                   onPressed: () => Navigator.of(context).pop(),
+    //                   child: Text('RETRY'))
+    //             ],
+    //           ));
+    // } catch (error) {
+    //   print('failed to load chain data');
+    //   messageToDisplay = 'Error, Please try again';
+
+    //   await showDialog(
+    //       context: context,
+    //       builder: (context) => AlertDialog(
+    //             title: Text('Error Occured'),
+    //             content: Text(error.toString()),
+    //             actions: [
+    //               TextButton(
+    //                   onPressed: () => Navigator.of(context).pop(),
+    //                   child: Text('RETRY'))
+    //             ],
+    //           ));
+    // }
 
     setState(() {
       isLoaded = true;

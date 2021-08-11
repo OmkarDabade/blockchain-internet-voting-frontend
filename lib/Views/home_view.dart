@@ -46,14 +46,11 @@ class _HomeViewState extends State<HomeView> {
               Icons.power_settings_new,
               color: Colors.white,
             ),
-            // tooltip: 'Logout',
             onPressed: () {
-              // await Navigator.pushNamed(context, Routes.voterLoginView);
               Navigator.popUntil(
                   context, ModalRoute.withName(Routes.voterLoginView));
             },
           ),
-          // Text('\n Logout   '),
           const Padding(padding: const EdgeInsets.only(right: 30.0))
         ],
       ),
@@ -211,44 +208,54 @@ class _HomeViewState extends State<HomeView> {
   void getCandidateList() async {
     print('Get cAndiates called');
 
-    candidateList = [];
-    Map<String, dynamic> jsonData = {};
+    // candidateList = [];
+    // Map<String, dynamic> jsonData = {};
 
-    if (kState != null && kState.isNotEmpty) jsonData['state'] = kState;
-    if (kDistrict != null && kDistrict.isNotEmpty)
-      jsonData['district'] = kDistrict;
-    if (kWard != null) jsonData['ward'] = kWard;
+    // if (kState != null && kState.isNotEmpty) jsonData['state'] = kState;
+    // if (kDistrict != null && kDistrict.isNotEmpty)
+    //   jsonData['district'] = kDistrict;
+    // if (kWard != null) jsonData['ward'] = kWard;
 
-    print('requesting server');
-    print(jsonData);
+    // print('requesting server');
+    // print(jsonData);
 
-    http.Response response =
-        await http.post(Uri.parse(baseAPIUrl + apiGetCandidates),
-            // Uri(
-            //   // queryParameters: jsonData,
-            //   host: hostUrl,
-            //   port: hostUrlPort,
-            //   path: apiGetCandidates,
-            //   // scheme: 'http',
-            // ),
-            headers: postHeadersWithJWT(kVoterJWTToken),
-            body: json.encode(jsonData));
+    // http.Response response = await http.post(
+    //     Uri.parse(baseAPIUrl + apiGetCandidates),
+    //     headers: postHeadersWithJWT(kVoterJWTToken),
+    //     body: json.encode(jsonData));
 
-    print('GET CANDIDATES RESPONSE: ');
-    print(response.body);
+    // print('GET CANDIDATES RESPONSE: ');
+    // print(response.body);
 
-    candidateListInJson = jsonDecode(response.body);
+    // candidateListInJson = jsonDecode(response.body);
+    // candidateListInJson = {};
 
-    if (candidateListInJson['result'] != null &&
-        candidateListInJson['result']) {
-      for (Map<String, dynamic> vote in candidateListInJson['candidates']) {
-        candidateList.add(Candidate.fromJson(vote));
-      }
+    // if (candidateListInJson['result'] != null &&
+    //     candidateListInJson['result']) {
+    //   for (Map<String, dynamic> candidateData
+    //       in candidateListInJson['candidates']) {
+    //     candidateList.add(Candidate.fromJson(candidateData));
+    //   }
 
-      print('Successfully loaded candidates list data');
-    } else {
-      print('failed to load candidates list data');
-    }
+    //   print('Successfully loaded candidates list data');
+    // } else {
+    //   print('failed to load candidates list data');
+    // }
+
+    candidateList = [
+      Candidate(
+        candidateId: 101,
+        candidateName: 'Demo Candidate to Vote',
+      ),
+      Candidate(
+        candidateId: 102,
+        candidateName: 'Demo Candidate',
+      ),
+      Candidate(
+        candidateId: 103,
+        candidateName: 'Funny Candidate',
+      ),
+    ];
 
     setState(() {
       isLoaded = true;
@@ -258,33 +265,43 @@ class _HomeViewState extends State<HomeView> {
   Future<void> requestServer(
       {@required int candidateId, @required String candidateName}) async {
     try {
-      String jsonBody = json.encode({
-        'candidateId': candidateId,
-        'candidateName': candidateName,
-        'voterId': kVoterId,
-      });
+      // String jsonBody = json.encode({
+      //   'candidateId': candidateId,
+      //   'candidateName': candidateName,
+      //   'voterId': kVoterId,
+      // });
 
-      http.Response response = await http.post(
-        Uri.parse(baseAPIUrl + apiCastVote),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiCastVote,
-        //   // scheme: 'http',
-        // ),
-        headers: postHeadersWithJWT(kVoterJWTToken),
-        body: jsonBody,
-      );
+      // http.Response response = await http.post(
+      //   Uri.parse(baseAPIUrl + apiCastVote),
+      //   headers: postHeadersWithJWT(kVoterJWTToken),
+      //   body: jsonBody,
+      // );
 
-      print('RESPONSE: ');
-      print(response.body);
+      // print('RESPONSE: ');
+      // print(response.body);
 
-      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      // Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      Map<String, dynamic> decodedJsonData = {
+        'result': true,
+      };
 
       if (decodedJsonData['result']) {
         // ShowDialog
         print('Vote Casted Successfully');
-        Vote vote = Vote.fromJson(decodedJsonData['data']);
+        // Vote vote = Vote.fromJson(decodedJsonData['data']);
+        Vote vote = Vote(
+            blockHash:
+                '!!!!!!!!!!!!!!!!!!!!!!!!!!!DeMo Bl0cK HAsH!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+            candidateId: candidateId,
+            candidateName: candidateName,
+            index: 0,
+            nonce: 4739,
+            previousHash:
+                '!!!!!!!!!!!!!!!!!!!!!!!!PreV!ou\$ DeMo Bl0cK HAsH!!!!!!!!!!!!!!!!!!!!!!!!',
+            timeStamp: DateTime.now().toIso8601String(),
+            voterIdHash:
+                '!!!!!!!!!!!!!!!!!!!!Y0uR Un!QuE DigiTAl FingeRpRint!!!!!!!!!!!!!!!!!!!!');
 
         await Clipboard.setData(ClipboardData(text: vote.voterIdHash)).then(
           (value) => ScaffoldMessenger.of(context).showSnackBar(
@@ -353,16 +370,17 @@ class _HomeViewState extends State<HomeView> {
       print('failed to cast vote');
 
       await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text('Error Occured'),
-                content: Text(error.toString()),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('RETRY'))
-                ],
-              ));
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error Occured'),
+          content: Text(error.toString()),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('RETRY'))
+          ],
+        ),
+      );
     }
   }
 }

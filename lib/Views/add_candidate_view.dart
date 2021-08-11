@@ -57,14 +57,11 @@ class _AddCandidateViewState extends State<AddCandidateView> {
               Icons.power_settings_new,
               color: Colors.white,
             ),
-            // tooltip: 'Logout',
             onPressed: () {
-              // await Navigator.pushNamed(context, Routes.voterLoginView);
               Navigator.popUntil(
                   context, ModalRoute.withName(Routes.voterLoginView));
             },
           ),
-          // Text('\n Logout   '),
           const Padding(padding: const EdgeInsets.only(right: 30.0))
         ],
       ),
@@ -351,30 +348,27 @@ class _AddCandidateViewState extends State<AddCandidateView> {
 
   Future<void> requestServer() async {
     try {
-      String jsonBody = json.encode({
-        'candidateName': _candidateName,
-        'candidateId': _candidateId,
-        'state': _state,
-        'district': _district,
-        'ward': _ward
-      });
+      // String jsonBody = json.encode({
+      //   'candidateName': _candidateName,
+      //   'candidateId': _candidateId,
+      //   'state': _state,
+      //   'district': _district,
+      //   'ward': _ward
+      // });
 
-      http.Response response = await http.post(
-        Uri.parse(baseAPIUrl + apiAddCandidate),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiAddCandidate,
-        //   // scheme: 'http',
-        // ),
-        headers: postHeadersWithJWT(kAdminJWTToken),
-        body: jsonBody,
-      );
+      // http.Response response = await http.post(
+      //   Uri.parse(baseAPIUrl + apiAddCandidate),
+      //   headers: postHeadersWithJWT(kAdminJWTToken),
+      //   body: jsonBody,
+      // );
 
-      print('RESPONSE: ');
-      print(response.body);
+      // print('RESPONSE: ');
+      // print(response.body);
 
-      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      // Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      Map<String, dynamic> decodedJsonData = {
+        'result': true,
+      };
 
       if (decodedJsonData['result']) {
         print('Candidate added Successfully');
@@ -382,8 +376,9 @@ class _AddCandidateViewState extends State<AddCandidateView> {
         await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Success'),
-            content: Text('Candidate Added Successfully'),
+            title: Text('Demo Success'),
+            content:
+                Text('Candidate Added Successfully but not saved anywhere'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),

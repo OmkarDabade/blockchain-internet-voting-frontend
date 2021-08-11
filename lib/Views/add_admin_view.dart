@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
@@ -183,28 +182,25 @@ class _AddAdminViewState extends State<AddAdminView> {
 
   Future<void> requestServer() async {
     try {
-      String jsonBody = json.encode({
-        'loginId': _adminLoginId,
-        'name': _adminName,
-        'password': _adminPassword
-      });
+      // String jsonBody = json.encode({
+      //   'loginId': _adminLoginId,
+      //   'name': _adminName,
+      //   'password': _adminPassword
+      // });
 
-      http.Response response = await http.post(
-        Uri.parse(baseAPIUrl + apiSignup),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiSignup,
-        //   // scheme: 'http',
-        // ),
-        headers: postHeaders,
-        body: jsonBody,
-      );
+      // http.Response response = await http.post(
+      //   Uri.parse(baseAPIUrl + apiSignup),
+      //   headers: postHeaders,
+      //   body: jsonBody,
+      // );
 
-      print('ADD ADMIN RESPONSE: ');
-      print(response.body);
+      // print('ADD ADMIN RESPONSE: ');
+      // print(response.body);
 
-      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      // Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      Map<String, dynamic> decodedJsonData = {
+        'result': true,
+      };
 
       if (decodedJsonData['result']) {
         // ShowDialog
@@ -213,8 +209,9 @@ class _AddAdminViewState extends State<AddAdminView> {
         await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Success'),
-            content: Text('Admin Registration Successful'),
+            title: Text('Demo Success'),
+            content: Text(
+                'Admin Registration Successful but is is not saved anywhere'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),

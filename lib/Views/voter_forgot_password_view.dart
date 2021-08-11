@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/location.dart';
@@ -357,29 +356,27 @@ class _ForgotPasswordViewState extends State<VoterForgotPasswordView> {
 
   Future<void> requestServer() async {
     try {
-      String jsonBody = json.encode({
-        'voterId': _voterId,
-        'name': _name,
-        'district': _district,
-        'newPassword': _newPassword,
-      });
+      // String jsonBody = json.encode({
+      //   'voterId': _voterId,
+      //   'name': _name,
+      //   'district': _district,
+      //   'newPassword': _newPassword,
+      // });
 
-      http.Response response = await http.post(
-        Uri.parse(baseAPIUrl + apiForgotPassword),
-        // Uri(
-        //   host: hostUrl,
-        //   port: hostUrlPort,
-        //   path: apiForgotPassword,
-        //   // scheme: 'http',
-        // ),
-        headers: postHeaders,
-        body: jsonBody,
-      );
+      // http.Response response = await http.post(
+      //   Uri.parse(baseAPIUrl + apiForgotPassword),
+      //   headers: postHeaders,
+      //   body: jsonBody,
+      // );
 
-      print('RESPONSE: ');
-      print(response.body);
+      // print('RESPONSE: ');
+      // print(response.body);
 
-      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+      // Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      Map<String, dynamic> decodedJsonData = {
+        'result': true,
+      };
 
       if (decodedJsonData['result']) {
         // ShowDialog
@@ -388,8 +385,9 @@ class _ForgotPasswordViewState extends State<VoterForgotPasswordView> {
         await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Success'),
-            content: Text(decodedJsonData['message']),
+            title: Text('Demo Success'),
+            content: Text(decodedJsonData['message'] ??
+                'No need to change password, please login'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),
