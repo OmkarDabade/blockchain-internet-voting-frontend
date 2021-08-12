@@ -1,7 +1,7 @@
 # I-Voting
 
 
-Demo: (click here)[https://omkardabade.github.io/Blockchain-Internet-Voting-Frontend]
+Demo: [click here](https://omkardabade.github.io/Blockchain-Internet-Voting-Frontend)
 
 ## Screenshots
 
