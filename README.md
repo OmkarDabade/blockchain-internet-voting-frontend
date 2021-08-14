@@ -4,14 +4,16 @@
 Demo: [click here](https://omkardabade.github.io/Blockchain-Internet-Voting-Frontend)
 
 Admin details:
+```
 loginId:admin
 password:admin
-
+```
 Voter details
+```
 voterId:test
 password:test
-
-Please use above credentials for login purpose
+```
+Please use above credentials for login purpose  
 For full fledged website [Click Here](https://i-vote-app.web.app)
 
 Please give some time for server to restart (Served on heroku free dyno).
