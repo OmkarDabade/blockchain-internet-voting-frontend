@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
@@ -7,6 +8,7 @@ import 'package:ivote/Views/proof_of_vote_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:ivote/model/candidate.dart';
 import 'package:ivote/model/vote.dart';
+import 'package:flutter/services.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -190,68 +192,10 @@ class _HomeViewState extends State<HomeView> {
                         elevation: 10,
                       ),
                       onPressed: () async {
-                        String jsonBody = json.encode({
-                          'candidateId': candidateId,
-                          'candidateName': candidateName,
-                          'voterId': kVoterId,
-                        });
-
-                        http.Response response = await http.post(
-                            Uri(
-                              host: hostUrl,
-                              port: hostUrlPort,
-                              path: apiCastVote,
-                              // scheme: 'http',
-                            ),
-                            headers: postHeadersWithJWT(kVoterJWTToken),
-                            body: jsonBody);
-
-                        print('RESPONSE: ');
-                        print(response.body);
-
-                        Map<String, dynamic> decodedJsonData =
-                            jsonDecode(response.body);
-
-                        if (decodedJsonData['result']) {
-                          // ShowDialog
-                          print('Vote Casted Successfully');
-                          Vote vote = Vote.fromJson(decodedJsonData['data']);
-
-                          await showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: Text('Success'),
-                                    content: Text('Vote Casted Successfully\n' +
-                                        vote.stringToShowVoter()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: Text('OK'))
-                                    ],
-                                  ));
-
-                          Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              Routes.proofOfVoteView,
-                              ModalRoute.withName(Routes.voterLoginView));
-                        } else {
-                          print('Failed to cast vote');
-
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: Text('Failed'),
-                                    content: Text('Failed to cast vote\n' +
-                                        decodedJsonData['message']),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: Text('RETRY'))
-                                    ],
-                                  ));
-                        }
+                        await requestServer(
+                          candidateId: candidateId,
+                          candidateName: candidateName,
+                        );
                       },
                       icon: Icon(Icons.thumb_up_outlined),
                       label: Text('Vote', style: TextStyle(fontSize: 19.0)),
@@ -276,17 +220,19 @@ class _HomeViewState extends State<HomeView> {
     if (kWard != null) jsonData['ward'] = kWard;
 
     print('requesting server');
+    print(jsonData);
 
-    http.Response response = await http.post(
-        Uri(
-          // queryParameters: jsonData,
-          host: hostUrl,
-          port: hostUrlPort,
-          path: apiGetCandidates,
-          // scheme: 'http',
-        ),
-        headers: postHeadersWithJWT(kVoterJWTToken),
-        body: json.encode(jsonData));
+    http.Response response =
+        await http.post(Uri.parse(baseAPIUrl + apiGetCandidates),
+            // Uri(
+            //   // queryParameters: jsonData,
+            //   host: hostUrl,
+            //   port: hostUrlPort,
+            //   path: apiGetCandidates,
+            //   // scheme: 'http',
+            // ),
+            headers: postHeadersWithJWT(kVoterJWTToken),
+            body: json.encode(jsonData));
 
     print('GET CANDIDATES RESPONSE: ');
     print(response.body);
@@ -307,5 +253,116 @@ class _HomeViewState extends State<HomeView> {
     setState(() {
       isLoaded = true;
     });
+  }
+
+  Future<void> requestServer(
+      {@required int candidateId, @required String candidateName}) async {
+    try {
+      String jsonBody = json.encode({
+        'candidateId': candidateId,
+        'candidateName': candidateName,
+        'voterId': kVoterId,
+      });
+
+      http.Response response = await http.post(
+        Uri.parse(baseAPIUrl + apiCastVote),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiCastVote,
+        //   // scheme: 'http',
+        // ),
+        headers: postHeadersWithJWT(kVoterJWTToken),
+        body: jsonBody,
+      );
+
+      print('RESPONSE: ');
+      print(response.body);
+
+      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      if (decodedJsonData['result']) {
+        // ShowDialog
+        print('Vote Casted Successfully');
+        Vote vote = Vote.fromJson(decodedJsonData['data']);
+
+        await Clipboard.setData(ClipboardData(text: vote.voterIdHash)).then(
+          (value) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Voter Hash copied to clipboard!')),
+          ),
+        );
+
+        await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Success'),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Vote Casted Successfully'),
+                      SelectableText('Block#: ${vote.index}'),
+                      SelectableText('Candidate Id: ${vote.candidateId}'),
+                      SelectableText('Candidate Name: ${vote.candidateName}'),
+                      SelectableText('Voter: ${vote.voterIdHash}'),
+                      SelectableText('Time: ${vote.timeStamp}'),
+                      SelectableText('Block Hash: ${vote.blockHash}'),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('OK'))
+                  ],
+                ));
+
+        Navigator.pushNamedAndRemoveUntil(context, Routes.proofOfVoteView,
+            ModalRoute.withName(Routes.voterLoginView));
+      } else {
+        print('Failed to cast vote');
+
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Failed'),
+            content: Text('Failed to cast vote\n' + decodedJsonData['message']),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('RETRY'))
+            ],
+          ),
+        );
+      }
+    } on SocketException {
+      print('failed to cast vote, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to cast vote');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
   }
 }

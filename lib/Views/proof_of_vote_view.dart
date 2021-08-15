@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
 import 'package:ivote/App/routes.dart';
@@ -6,20 +7,31 @@ import 'package:http/http.dart' as http;
 import 'package:ivote/model/vote.dart';
 
 class ProofOfVoteView extends StatefulWidget {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   @override
   _ProofOfVoteState createState() => _ProofOfVoteState();
 }
 
 class _ProofOfVoteState extends State<ProofOfVoteView> {
-  List<Vote> chain = [];
+  List<Vote> chain = [], tempChain;
   Map<String, dynamic> chainInJson;
-  bool isLoaded;
+  bool isLoaded, searchResults;
+  final List<String> queries = ['blockNo', 'blockHash', 'voterIdHash'];
+  String selectedQuery = 'blockNo', messageToDisplay;
+  dynamic searchValue;
+
+  TextEditingController textEditingController = TextEditingController();
+
+  final Map<String, String> searchBoxHints = {
+    'blockNo': 'Enter the INDEX of block where your vote resides',
+    'blockHash': 'Enter the HASH of block where your vote resides',
+    'voterIdHash': 'Enter the YOUT VOTER HASH of block where your vote resides',
+  };
 
   @override
   void initState() {
-    isLoaded = false;
     getChain();
-
     super.initState();
   }
 
@@ -29,8 +41,22 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
       appBar: AppBar(
         toolbarHeight: 46,
         shadowColor: Colors.blueAccent,
-        leading: Offstage(),
-        title: Text("Welcome"),
+        leading: BackButton(
+          onPressed: () {
+            Navigator.popUntil(
+                context, ModalRoute.withName(Routes.voterLoginView));
+          },
+        ),
+        title: TextButton(
+          child: Text("Proof of Vote",
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white,
+              )),
+          onPressed: () {
+            getChain();
+          },
+        ),
         //   actions: <Widget>[
         //     IconButton(
         //       icon: Icon(Icons.power_settings_new),
@@ -51,49 +77,122 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
                   height: 70.0,
                   width: double.infinity,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Spacer(),
                       Container(
-                        width: MediaQuery.of(context).size.width * 3 / 5,
-                        child: TextField(
-                          decoration: InputDecoration(
-                              hintText:
-                                  'Enter your private key to check your vote submission'),
+                        height: 20.0,
+                        width: 100.0,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            // decoration: InputDecoration(
+                            //   labelStyle: Theme.of(context)
+                            //       .primaryTextTheme
+                            //       .caption
+                            //       .copyWith(color: Colors.black),
+                            //   border: const OutlineInputBorder(),
+                            // ),
+                            isExpanded: true,
+
+                            items: queries.map((String dropDownStringItem) {
+                              return DropdownMenuItem<String>(
+                                value: dropDownStringItem,
+                                child: Text(dropDownStringItem),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedQuery = value;
+                              });
+                            },
+                            value: selectedQuery,
+                          ),
                         ),
                       ),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.lightBlue,
-                          onPrimary: Colors.white,
-                          shadowColor: Colors.black,
-                          elevation: 10,
+                      Form(
+                        key: widget.formKey,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 3 / 5,
+                          child: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Please enter Candidate Id';
+                              if (selectedQuery == 'blockNo' &&
+                                  int.tryParse(value) == null)
+                                return "Please Enter numeric data";
+
+                              return null;
+                            },
+                            onSaved: (value) {
+                              if (value != null || value.isNotEmpty) {
+                                if (selectedQuery == 'blockNo')
+                                  searchValue = int.tryParse(value);
+                                else
+                                  searchValue = value;
+                              }
+                            },
+                            decoration: InputDecoration(
+                                hintText: searchBoxHints[selectedQuery]),
+                          ),
                         ),
-                        onPressed: () {},
-                        icon: Icon(Icons.search_sharp),
-                        label: Text('Search', style: TextStyle(fontSize: 18.0)),
-                      )
+                      ),
+                      Spacer(),
+                      Container(
+                        height: 35.0,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.lightBlue,
+                            onPrimary: Colors.white,
+                            shadowColor: Colors.black,
+                            elevation: 5,
+                          ),
+                          onPressed: () {
+                            if (widget.formKey.currentState.validate()) {
+                              widget.formKey.currentState.save();
+                              searchProofOfVote();
+                            }
+                          },
+                          icon: Icon(Icons.search_sharp),
+                          label:
+                              Text('Search', style: TextStyle(fontSize: 18.0)),
+                        ),
+                      ),
+                      Spacer(),
                     ],
                   ),
                 ),
-                _proofOfVoteBlock(
-                    blockNo: 'Block#',
-                    voterHash: 'Voter',
-                    blockHash: 'Tx Block Hash',
-                    votedTo: 'Vote to',
-                    timestamp: 'Time'),
-                const SizedBox(height: 10.0),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: chain.length,
-                    itemBuilder: (context, index) => _proofOfVoteBlock(
-                      blockNo: chain[index].index.toString(),
-                      blockHash: chain[index].blockHash,
-                      voterHash: chain[index].voterIdHash,
-                      votedTo: chain[index].candidateName,
-                      timestamp: chain[index].timeStamp,
-                    ),
-                  ),
+                  child: chain.isNotEmpty
+                      ? SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: DataTable(
+                            columnSpacing: 35.0,
+                            columns: [
+                              DataColumn(
+                                  label: Text('Block No'), numeric: true),
+                              DataColumn(label: Text('Voter')),
+                              DataColumn(label: Text('Block Tx Hash')),
+                              DataColumn(label: Text('Candidate Name')),
+                              DataColumn(label: Text('Time')),
+                            ],
+                            rows: [
+                              for (Vote vote in chain)
+                                DataRow(cells: [
+                                  DataCell(Text(vote.index.toString())),
+                                  DataCell(Text(vote.voterIdHash)),
+                                  DataCell(Text(vote.blockHash)),
+                                  DataCell(Text(vote.candidateName)),
+                                  DataCell(Text(vote.timeStamp)),
+                                ])
+                            ],
+                          ),
+                        )
+                      : Center(
+                          child: Text(messageToDisplay),
+                        ),
                 ),
               ],
             )
@@ -113,69 +212,112 @@ class _ProofOfVoteState extends State<ProofOfVoteView> {
     );
   }
 
-  Widget _proofOfVoteBlock(
-          {@required String blockHash,
-          @required String voterHash,
-          @required String votedTo,
-          @required String blockNo,
-          @required String timestamp}) =>
-      Container(
-        margin: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 2.0),
-        padding: EdgeInsets.all(15.0),
-        height: 50.0,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
-          color: Colors.grey[400],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 1,
-              child: Container(child: Text(blockNo)),
-            ),
-            Expanded(
-              flex: 4,
-              child: Container(child: Text(voterHash)),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(child: Text(votedTo)),
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(child: Text(timestamp)),
-            ),
-            Expanded(
-              flex: 7,
-              child: Container(child: Text(blockHash)),
-            ),
-          ],
-        ),
+  void getChain() async {
+    setState(() {
+      isLoaded = false;
+    });
+
+    chain = [];
+    chainInJson = {};
+
+    try {
+      http.Response response = await http.get(
+        Uri.parse(baseAPIUrl + apiChain),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiChain,
+        //   // scheme: 'http',
+        // ),
       );
 
-  void getChain() async {
-    chain = [];
+      print('RESPONSE: ${response.body}');
+      chainInJson = jsonDecode(response.body);
 
-    http.Response response = await http.get(
-      Uri(
-        host: hostUrl,
-        port: hostUrlPort,
-        path: apiChain,
-        // scheme: 'http',
-      ),
-    );
-
-    print('RESPONSE: ');
-    chainInJson = jsonDecode(response.body);
-
-    for (Map<String, dynamic> vote in chainInJson['chain']) {
-      chain.add(Vote.fromJson(vote));
+      if (chainInJson.isNotEmpty && chainInJson['result']) {
+        for (Map<String, dynamic> vote in chainInJson['chain']) {
+          chain.add(Vote.fromJson(vote));
+        }
+        print('Successfully loaded chain data');
+      }
+    } catch (error) {
+      messageToDisplay =
+          'Connection Error, Please check your internet connection';
+      print('failed to load chain data, possibly network error');
     }
 
-    print('Successfully loaded chain data');
+    setState(() {
+      isLoaded = true;
+    });
+  }
+
+  void searchProofOfVote() async {
+    setState(() {
+      isLoaded = false;
+    });
+    chain = [];
+    chainInJson = {};
+
+    try {
+      http.Response response = await http.post(
+        Uri.parse(baseAPIUrl + apiSearch),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiSearch,
+        //   // scheme: 'http',
+        // ),
+        headers: postHeaders,
+        body: json.encode({selectedQuery: searchValue}),
+      );
+
+      // if (response.statusCode == 200) {
+      print('RESPONSE OF SEARCH: ${response.body}');
+      chainInJson = jsonDecode(response.body);
+
+      if (chainInJson.isNotEmpty && chainInJson['result']) {
+        chain.add(Vote.fromJson(chainInJson['vote']));
+
+        print('Successfully loaded chain data for search');
+      } else if (chainInJson.isNotEmpty) {
+        messageToDisplay = chainInJson['message'];
+      } else {
+        messageToDisplay = 'Some error occured';
+      }
+    } on SocketException {
+      messageToDisplay =
+          'Error, Please check your internet connection and try again';
+      print('failed to load chain data, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to load chain data');
+      messageToDisplay = 'Error, Please try again';
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
+
     setState(() {
       isLoaded = true;
     });

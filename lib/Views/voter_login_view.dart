@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
@@ -13,6 +14,8 @@ class VoterLoginView extends StatefulWidget {
 
 class _LoginViewState extends State<VoterLoginView> {
   String _voterId, _password;
+  bool isError = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,18 +23,20 @@ class _LoginViewState extends State<VoterLoginView> {
         title: const Text('Welcome'),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
+          // padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text(
-                'I-Voting',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+              child: Center(
+                child: Text(
+                  'I-Voting',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
                 ),
               ),
             ),
@@ -42,13 +47,13 @@ class _LoginViewState extends State<VoterLoginView> {
                 Navigator.pushNamed(context, Routes.proofOfVoteView);
               },
             ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Add admin'),
-              onTap: () {
-                Navigator.pushNamed(context, Routes.addAdminView);
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.account_circle),
+            //   title: Text('Add admin'),
+            //   onTap: () {
+            //     Navigator.pushNamed(context, Routes.addAdminView);
+            //   },
+            // ),
             ListTile(
               leading: Icon(Icons.account_circle),
               title: Text('Admin Login'),
@@ -63,6 +68,12 @@ class _LoginViewState extends State<VoterLoginView> {
                 Navigator.pushNamed(context, Routes.voterSignUpView);
               },
             ),
+            Spacer(),
+            Container(
+              height: 50.0,
+              width: double.infinity,
+              child: Center(child: Text('Version: $version')),
+            )
           ],
         ),
       ),
@@ -157,32 +168,7 @@ class _LoginViewState extends State<VoterLoginView> {
                       print('Voter Id: $_voterId');
                       print('Password: $_password');
 
-                      String jsonBody = json
-                          .encode({'voterId': _voterId, 'password': _password});
-
-                      http.Response response = await http.post(
-                          Uri(
-                            host: hostUrl,
-                            port: hostUrlPort,
-                            path: apiLogin,
-                            // scheme: 'http',
-                          ),
-                          headers: postHeaders,
-                          body: jsonBody);
-
-                      print('RESPONSE: ');
-                      print(response.body);
-
-                      Map<String, dynamic> decodedJsonData =
-                          jsonDecode(response.body);
-
-                      if (decodedJsonData['isVoteCasted']) {
-                        // ShowDialog
-                        print('Vote ALready Casted');
-                      } else {
-                        extractVoterData(decodedJsonData);
-                        Navigator.pushNamed(context, Routes.homeView);
-                      }
+                      await requestServer();
                     } else
                       print('Validation Failed');
                   },
@@ -223,5 +209,109 @@ class _LoginViewState extends State<VoterLoginView> {
                 ),
               ))),
     );
+  }
+
+  Future<void> requestServer() async {
+    try {
+      String jsonBody =
+          json.encode({'voterId': _voterId, 'password': _password});
+
+      http.Response response = await http.post(Uri.parse(baseAPIUrl + apiLogin),
+          // Uri(
+          //   host: hostUrl,
+          //   port: hostUrlPort,
+          //   path: apiLogin,
+          //   // scheme: 'http',
+          // ),
+          headers: postHeaders,
+          body: jsonBody);
+
+      print('RESPONSE: ');
+      print(response.body);
+
+      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      if (decodedJsonData['result']) {
+        print('voter login response recieved with res=true');
+
+        if (decodedJsonData['isVoteCasted']) {
+          // ShowDialog
+          print('Vote ALready Casted');
+
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Error'),
+              content: Text('Vote Already Casted'),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('OK'))
+              ],
+            ),
+          );
+        } else {
+          print('Voter Login Successful');
+          extractVoterData(decodedJsonData);
+
+          await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text('Success'),
+                    content: Text('Login Successful'),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('OK'))
+                    ],
+                  ));
+          Navigator.pushNamed(context, Routes.homeView);
+        }
+      } else {
+        print('Voter Login Failed');
+
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Failed'),
+            content: Text('Login Failed\n' + decodedJsonData['message']),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'))
+            ],
+          ),
+        );
+      }
+    } on SocketException {
+      print('failed to login, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to login');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
   }
 }

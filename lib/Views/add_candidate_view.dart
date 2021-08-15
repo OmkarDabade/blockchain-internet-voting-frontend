@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ivote/App/admin_data.dart';
@@ -306,26 +307,7 @@ class _AddCandidateViewState extends State<AddCandidateView> {
                     print('District: $_district');
                     print('Ward : $_ward');
 
-                    String jsonBody = json.encode({
-                      'candidateName': _candidateName,
-                      'candidateId': _candidateId,
-                      'state': _state,
-                      'district': _district,
-                      'ward': _ward
-                    });
-
-                    http.Response response = await http.post(
-                        Uri(
-                          host: hostUrl,
-                          port: hostUrlPort,
-                          path: apiAddCandidate,
-                          // scheme: 'http',
-                        ),
-                        headers: postHeadersWithJWT(kAdminJWTToken),
-                        body: jsonBody);
-
-                    print('RESPONSE: ');
-                    print(response.body);
+                    await requestServer();
                   } else
                     print('Validation Failed');
                 },
@@ -365,5 +347,98 @@ class _AddCandidateViewState extends State<AddCandidateView> {
 
   void _onSelectedWard(String value) {
     setState(() => _selectedWard = value);
+  }
+
+  Future<void> requestServer() async {
+    try {
+      String jsonBody = json.encode({
+        'candidateName': _candidateName,
+        'candidateId': _candidateId,
+        'state': _state,
+        'district': _district,
+        'ward': _ward
+      });
+
+      http.Response response = await http.post(
+        Uri.parse(baseAPIUrl + apiAddCandidate),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiAddCandidate,
+        //   // scheme: 'http',
+        // ),
+        headers: postHeadersWithJWT(kAdminJWTToken),
+        body: jsonBody,
+      );
+
+      print('RESPONSE: ');
+      print(response.body);
+
+      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      if (decodedJsonData['result']) {
+        print('Candidate added Successfully');
+
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Success'),
+            content: Text('Candidate Added Successfully'),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'))
+            ],
+          ),
+        );
+
+        widget.formKey.currentState.reset();
+      } else {
+        print('Failed to add candidate');
+
+        await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Failed'),
+                  content: Text('Adding Candidate Failed\n' +
+                          decodedJsonData['message'] ??
+                      ''),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('OK'))
+                  ],
+                ));
+      }
+    } on SocketException {
+      print('failed to add candidate, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to add candidate');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
   }
 }

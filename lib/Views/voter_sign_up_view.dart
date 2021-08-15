@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ivote/App/constants.dart';
@@ -395,30 +396,7 @@ class _SignupViewState extends State<VoterSignUpView> {
                       print('Mobile: $_mobileNo');
                       print('Password: $_password');
 
-                      String jsonBody = json.encode({
-                        'voterId': _voterId,
-                        'name': _name,
-                        'state': _state,
-                        'district': _district,
-                        'ward': _ward,
-                        'mobile': _mobileNo,
-                        'password': _password
-                      });
-
-                      http.Response response = await http.post(
-                          Uri(
-                            host: hostUrl,
-                            port: hostUrlPort,
-                            path: apiSignup,
-                            // scheme: 'http',
-                          ),
-                          headers: postHeaders,
-                          body: jsonBody);
-
-                      print('RESPONSE: ');
-                      print(response.body);
-
-                      // Navigator.pushNamed(context, Routes.homeView);
+                      await requestServer();
                     } else
                       print('Validation Failed');
                   },
@@ -476,5 +454,102 @@ class _SignupViewState extends State<VoterSignUpView> {
 
   void _onSelectedWard(String value) {
     setState(() => _selectedWard = value);
+  }
+
+  Future<void> requestServer() async {
+    try {
+      String jsonBody = json.encode({
+        'voterId': _voterId,
+        'name': _name,
+        'state': _state,
+        'district': _district,
+        'ward': _ward,
+        'mobile': _mobileNo,
+        'password': _password
+      });
+
+      http.Response response = await http.post(
+        Uri.parse(baseAPIUrl + apiSignup),
+        // Uri(
+        //   host: hostUrl,
+        //   port: hostUrlPort,
+        //   path: apiSignup,
+        //   // scheme: 'http',
+        // ),
+        headers: postHeaders,
+        body: jsonBody,
+      );
+
+      print('RESPONSE: ');
+      print(response.body);
+
+      Map<String, dynamic> decodedJsonData = jsonDecode(response.body);
+
+      if (decodedJsonData['result']) {
+        // ShowDialog
+        print('Voter added Successfully');
+
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Success'),
+            content: Text('Voter Registration Successful'),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'))
+            ],
+          ),
+        );
+
+        widget.formKey.currentState.reset();
+        Navigator.popUntil(context, ModalRoute.withName(Routes.voterLoginView));
+      } else {
+        print('Failed to add voter');
+
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Failed'),
+                  content: Text(
+                      'Registration Failed\n' + decodedJsonData['message'] ??
+                          ''),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('OK'))
+                  ],
+                ));
+      }
+    } on SocketException {
+      print('failed to add voter, network error');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Network Error'),
+                content: Text(
+                    "Connection Error, Please check your internet connection"),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    } catch (error) {
+      print('failed to add voter');
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Error Occured'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('RETRY'))
+                ],
+              ));
+    }
   }
 }

@@ -11,7 +11,7 @@ class IVote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'I-Vote',
+      title: 'I Vote',
       // Dont change this
       // this is root of project
       initialRoute: Routes.voterLoginView,
