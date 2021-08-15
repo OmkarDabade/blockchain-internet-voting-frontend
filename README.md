@@ -11,7 +11,7 @@ For a basic demo without a server and without any login credentials. [Visit Here
 
 For full fledged, hosted website with a server backend please follow as mentioned below. (It may or may not work)
 
-Use this details for login purposes.  
+Use this details for login.  
 Admin details:
 ```
 loginId:  admin
