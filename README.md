@@ -7,7 +7,8 @@ Backend: Source code for backend is available [Here](https://github.com/OmkarDab
 
 ## Demo of the website
 
-For a basic demo without a server and without any login credentials. [Visit Here](https://omkardabade.github.io/Blockchain-Internet-Voting-Frontend)
+For a basic demo without a server and without any login credentials. [Visit Here](https://omkardabade.github.io/Blockchain-Internet-Voting-Frontend)  
+Best works on desktop.
 
 For full fledged, hosted website with a server backend please follow as mentioned below. (It may or may not work)
 
